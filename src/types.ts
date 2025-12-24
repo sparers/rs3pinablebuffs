@@ -16,12 +16,14 @@ export interface BuffCacheEntry {
     progress: number;
     initialCooldown: number;
     isPinned: boolean;
+    isAudioQueued: boolean;
     order: number;
 }
 
 export interface PersistedBuff {
     name: string;
     isPinned: boolean;
+    isAudioQueued: boolean;
     order?: number;
     imagePath?: string;
 }

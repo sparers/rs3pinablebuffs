@@ -16,7 +16,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     // library means that the exports from the entry file can be accessed from outside, in this case from the global scope as window.TestApp
     library: { type: "umd", name: "TestApp" },
-    devtoolModuleFilenameTemplate: (info) => `file:///${info.absoluteResourcePath.replace(/\\/g, '/')}`,
+    devtoolModuleFilenameTemplate: (info) => `file:///${info.absoluteResourcePath.replace(/\\/g, "/")}`,
   },
   devtool: "source-map",
   mode: "development",
@@ -34,6 +34,7 @@ module.exports = {
       // type:"asset" means that webpack copies the file and gives you an url to them when you import them from js
       { test: /\.(png|jpg|jpeg|gif|webp)$/, exclude: /\.data\.png$/, type: "asset/resource", generator: { filename: "[base]" } },
       { test: /\.(html|json)$/, exclude: /\.fontmeta\.json/, type: "asset/resource", generator: { filename: "[base]" } },
+      { test: /\.(mp3|wav|ogg)$/, type: "asset/resource", generator: { filename: "[base]" } },
       // file types useful for writing alt1 apps, make sure these two loader come after any other json or png loaders, otherwise they will be ignored
       { test: /\.data\.png$/, loader: "alt1/imagedata-loader", type: "javascript/auto" },
       { test: /\.fontmeta.json/, loader: "alt1/font-loader" },
@@ -55,6 +56,11 @@ module.exports = {
         {
           from: "nis",
           to: "nis",
+          noErrorOnMissing: true,
+        },
+        {
+          from: "audio",
+          to: "audio",
           noErrorOnMissing: true,
         },
       ],

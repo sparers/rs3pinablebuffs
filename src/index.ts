@@ -1,6 +1,7 @@
 import Alpine from 'alpinejs';
 import * as alt1 from 'alt1';
 import "./appconfig.json";
+import alertSound from './audio/pop-alert.mp3';
 import { BuffImageRegistry } from './BuffImageRegistry';
 import { BuffManager } from './BuffManager';
 import "./icon.png";
@@ -27,6 +28,8 @@ Alpine.data('buffsData', () => ({
   buffs: [],
   draggedIndex: null as number | null,
   isDragging: false,
+  alertedBuffs: new Set<string>(),
+  audio: new Audio(alertSound),
 
   formatTime(seconds: number): string {
     const mins = Math.floor(seconds / 60);
@@ -42,6 +45,16 @@ Alpine.data('buffsData', () => ({
     }
     // Then update the manager's cache
     buffManager.toggleBuffPin(buffName);
+  },
+
+  toggleAudioQueue(buffName: string) {
+    // Update local state immediately for instant UI feedback
+    const buff = this.buffs.find(b => b.name === buffName);
+    if (buff) {
+      buff.isAudioQueued = !buff.isAudioQueued;
+    }
+    // Then update the manager's cache
+    buffManager.toggleBuffAudioQueue(buffName);
   },
 
   setOverlayPosition() {
@@ -87,6 +100,23 @@ Alpine.data('buffsData', () => ({
     }
   },
 
+  checkAndPlayAlerts() {
+    this.buffs.forEach(buff => {
+      const isFlashing = buff.progress <= 30 && !buff.inactive && buff.cooldown <= 60;
+
+      if (isFlashing && buff.isAudioQueued && !this.alertedBuffs.has(buff.name)) {
+        // Play alert sound
+        this.audio.currentTime = 0;
+        this.audio.play().catch(err => console.log('Audio play failed:', err));
+        // Mark this buff as alerted
+        this.alertedBuffs.add(buff.name);
+      } else if (!isFlashing && this.alertedBuffs.has(buff.name)) {
+        // Remove from alerted set when buff is no longer flashing
+        this.alertedBuffs.delete(buff.name);
+      }
+    });
+  },
+
   async init() {
     const updateLoop = async () => {
       // Skip update if user is dragging buffs
@@ -94,6 +124,7 @@ Alpine.data('buffsData', () => ({
         const existingBuffs = await buffManager.getActiveBuffs();
         if (existingBuffs) {
           this.buffs = existingBuffs.map(b => ({ ...b }));
+          this.checkAndPlayAlerts();
         }
 
         // Wait for Alpine to update the DOM

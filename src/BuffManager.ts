@@ -83,8 +83,7 @@ export class BuffManager {
                 lastUpdate: existingBuff?.lastUpdate || Date.now(),
                 progress: newProgress,
                 initialCooldown: newInitialCooldown,
-                isPinned: existingBuff?.isPinned || false,
-                order: existingBuff?.order ?? 999
+                isPinned: existingBuff?.isPinned || false, isAudioQueued: existingBuff?.isAudioQueued || false, order: existingBuff?.order ?? 999
               });
               break;
             }
@@ -144,6 +143,7 @@ export class BuffManager {
     const buffsArray: PersistedBuff[] = Array.from(this.matchedBuffsCache.values()).map(buff => ({
       name: buff.name,
       isPinned: buff.isPinned,
+      isAudioQueued: buff.isAudioQueued,
       order: buff.order,
       imagePath: buff.imagePath
     }));
@@ -164,6 +164,7 @@ export class BuffManager {
           progress: 0,
           initialCooldown: 0,
           isPinned: buff.isPinned,
+          isAudioQueued: buff.isAudioQueued,
           order: buff.order ?? 999
         });
       });
@@ -258,6 +259,14 @@ export class BuffManager {
     const buff = this.matchedBuffsCache.get(buffName);
     if (buff) {
       buff.isPinned = !buff.isPinned;
+      this.saveCachedBuffs();
+    }
+  };
+
+  public toggleBuffAudioQueue = (buffName: string): void => {
+    const buff = this.matchedBuffsCache.get(buffName);
+    if (buff) {
+      buff.isAudioQueued = !buff.isAudioQueued;
       this.saveCachedBuffs();
     }
   };
