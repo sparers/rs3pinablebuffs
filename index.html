@@ -42,9 +42,8 @@
             </svg>
             <h3>No Buffs Tracked</h3>
             <p>Active buffs will appear here once detected in-game.</p>
-            <p class="hint">Make sure Alt1 is running and you're in RuneScape 3.</p>
           </div>
-          <div class="settings-section">
+          <div class="settings-section" x-show="buffs.length > 0">
             <template x-for="(buff, index) in buffs" :key="buff.name">
               <div
                 class="buff-row"
@@ -99,6 +98,7 @@
       <div class="tab-content" x-show="activeTab === 'settings'">
         <div class="settings-section">
           <p>To set the overlay click tyhe button above go to your desired location and press alt + 1.</p>
+          <p>Only pinned buffs will display in the overlay.</p>
           <div class="header-buttons">
             <button x-on:click="setOverlayPosition()" class="nisbutton">Set overlay position</button>
           </div>
