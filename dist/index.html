@@ -7,7 +7,10 @@
   <body class="nis">
     <div id="output"></div>
     <div id="settings" class="hidden" x-data="buffsData">
-      <button x-on:click="setOverlayPosition()" class="nisbutton">Set overlay</button>
+      <div class="header-buttons">
+        <button x-on:click="setOverlayPosition()" class="nisbutton">Set overlay</button>
+        <a href="https://discord.gg/3A3kE8Pjvp" target="_blank" class="nisbutton discord"> Discord </a>
+      </div>
       <p>[Info] buffs that are in progress and the duration is greather then 60s will start to tick when they change the timestamp. eg: from 5m to 4m.</p>
       <h2>Buff history</h2>
       <div id="buffs-output">
