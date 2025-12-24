@@ -248,6 +248,7 @@ p.version {
   --hp-red-gradient: linear-gradient(180deg, #ff4d4d 0%, #cc0000 50%, #990000 100%);
   --prayer-purple-gradient: linear-gradient(180deg, #a64dff 0%, #6600cc 50%, #330066 100%);
   --adren-yellow-gradient: linear-gradient(180deg, #ffd700 0%, #ffaa00 50%, #cc8800 100%);
+  --summoning-blue-gradient: linear-gradient(180deg, #4d9fff 0%, #0066cc 50%, #003366 100%);
   --text-shadow: 1px 1px 0 #000;
   --ui-bg: rgba(10, 10, 10, 0.95);
 }
@@ -355,6 +356,10 @@ p.version {
   background: var(--adren-yellow-gradient);
 }
 
+.cooldown-fill {
+  background: var(--summoning-blue-gradient);
+}
+
 /* Buff Bar (Existing functionality, restyled slightly) */
 .buff-container {
   display: flex;
@@ -396,6 +401,21 @@ p.version {
 
 .buff-icon-img {
   height: 32px;
+}
+
+.tracks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.tracks-container .cooldown {
+  height: 8px;
+}
+
+.tracks-container .cooldown .buff-label {
+  font-size: 10px;
+  top: -4px;
 }
 
 .buff-bar-track {
