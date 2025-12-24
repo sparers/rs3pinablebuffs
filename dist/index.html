@@ -31,7 +31,7 @@
             <div class="stat-icon buff-icon">
               <img class="buff-icon-img" :src="buff.imagePath" :alt="buff.name" />
             </div>
-            <div class="buff-bar-track" :class="{ 'flashing': buff.progress <= 30 && !buff.inactive }">
+            <div class="buff-bar-track" :class="{ 'flashing': buff.progress <= 30 && !buff.inactive && buff.cooldown <= 60 }">
               <div class="bar-fill adren-fill" :style="{ width: buff.progress + '%' }"></div>
               <span class="buff-label">
                 <span class="buff-name" x-text="buff.name"></span>

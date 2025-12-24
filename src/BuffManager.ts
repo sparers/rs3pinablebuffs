@@ -133,7 +133,6 @@ export class BuffManager {
         buff.lastUpdate = now;
         if (buff.initialCooldown > 0) {
           buff.progress = Math.max(0, (buff.cooldown / buff.initialCooldown) * 100);
-          console.log(buff.progress)
         } else {
           buff.progress = 0;
         }

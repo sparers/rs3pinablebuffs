@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"build": "webpack --mode production",
+		"build": "rimraf dist && webpack --mode production",
 		"watch": "webpack --watch",
 		"serve": "http-server dist -p 8080 -o"
 	},
@@ -16,6 +16,7 @@
 		"css-loader": "^7.1.2",
 		"dom-to-image": "^2.6.0",
 		"http-server": "^14.1.1",
+		"rimraf": "^6.1.2",
 		"sharp": "^0.31.3",
 		"style-loader": "^4.0.0",
 		"ts-loader": "^9.3.1",
