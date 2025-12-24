@@ -5,13 +5,15 @@ export interface BuffData {
     image: any;
     threshold: number;
     path: string;
+    debug?: boolean;
+    cooldown: number;
+    hasCooldown: boolean;
 }
 
 export interface BuffCacheEntry {
     name: string;
     imagePath: string;
     buffCooldown: number;
-    inactive: boolean;
     lastUpdate: number;
     progress: number;
     initialBuffCooldown: number;
@@ -19,7 +21,8 @@ export interface BuffCacheEntry {
     isAudioQueued: boolean;
     cooldown: number;
     cooldownProgress: number;
-    initialiCooldown: number
+    initialiCooldown: number;
+    hasCooldown: boolean;
     order: number;
 }
 
@@ -29,6 +32,10 @@ export interface PersistedBuff {
     isAudioQueued: boolean;
     order?: number;
     imagePath?: string;
+    cooldown?: number;
+    cooldownProgress?: number;
+    initialiCooldown?: number;
+    hasCooldown: boolean
 }
 
 export interface OverlayPosition {

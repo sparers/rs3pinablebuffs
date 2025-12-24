@@ -384,7 +384,7 @@ p.version {
   margin-bottom: 0;
 }
 
-.buff-row.disabled {
+.disabled {
   opacity: 0.5;
   filter: grayscale(100%);
 }

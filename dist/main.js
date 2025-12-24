@@ -8084,333 +8084,399 @@ var BuffImageRegistry = /** @class */ (function () {
                             {
                                 name: "Overload", image: this.Buffs.overloaded, threshold: 300, path: './imgs/icons/overload.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Elder Overload", image: this.Buffs.elderOverload, threshold: 60, path: './imgs/icons/elder_overload.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Supreme Overload", image: this.Buffs.supremeOverloadActive, threshold: 30, path: './imgs/icons/supreme_overload.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Weapon Poison", image: this.Buffs.poisonous, threshold: 300, path: './imgs/icons/weapon_poison.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Darkness", image: this.Buffs.darkness, threshold: 400, path: './imgs/icons/darkness.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Animate Dead", image: this.Buffs.animateDead, threshold: 60, path: './imgs/icons/animate_dead.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "FSOA Spec", image: this.Buffs.fsoaWeaponSpec, threshold: 80, path: './imgs/icons/fsoa_spec.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Time Rift", image: this.Buffs.timeRift, threshold: 450, path: './imgs/icons/time_rift.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Gladiators Rage", image: this.Buffs.gladiatorsRage, threshold: 50, path: './imgs/icons/gladiators_rage.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Necrosis", image: this.Buffs.necrosis, threshold: 150, path: './imgs/icons/necrosis.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Aura", image: this.Buffs.aura, threshold: 400, path: './imgs/icons/equilibrium_aura.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Bonfire Boost", image: this.Buffs.bonfireBoost, threshold: 400, path: './imgs/icons/bonfire.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Grimoire", image: this.Buffs.grimoire, threshold: 100, path: "./imgs/icons/grimoire.png",
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Lantadyme Incense", image: this.Incense.lantadyme, threshold: 119, path: './imgs/icons/lantadyme_incense_sticks.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Dwarf Weed Incense", image: this.Incense.dwarfWeed, threshold: 150, path: './imgs/icons/dwarf_weed_incense_sticks.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Fellstalk Incense", image: this.Incense.fellstalk, threshold: 150, path: './imgs/icons/fellstalk_weed_incense_sticks.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Kwuarm Incense", image: this.Incense.kwuarm, threshold: 150, path: './imgs/icons/kwuarm_weed_incense_sticks.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Antifire", image: this.Buffs.Antifire, threshold: 225, path: './imgs/icons/antifire.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Aggression Potion", image: this.Buffs.AggressionPotion, threshold: 120, path: './imgs/icons/aggression_potion.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Powder of Protection", image: this.Buffs.PowderOfProtection, threshold: 130, path: './imgs/icons/powder_of_protection.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Powder of Penance", image: this.Buffs.PowderOfPenance, threshold: 130, path: './imgs/icons/powder_of_penance.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Prayer Renewal", image: this.Buffs.prayerRenewActive, threshold: 225, path: './imgs/icons/prayer_renewal.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Death Spark", image: this.Buffs.DeathSpark, threshold: 300, path: './imgs/icons/death_spark.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Balance By Force", image: this.Buffs.balanceByForce, threshold: 30, path: './imgs/icons/balance_by_force.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "BOLG Stacks", image: this.Buffs.perfectEquilibriumNoBorder, threshold: 300, path: './imgs/icons/perfect_equilibrium.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Anticipation", image: this.Buffs.Anticipation, threshold: 300, path: './imgs/icons/anticipation.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 24.6,
+                                hasCooldown: true
                             },
                             {
                                 name: "Barricade", image: this.Buffs.Barricade, threshold: 300, path: './imgs/icons/barricade.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Devotion", image: this.Buffs.Devotion, threshold: 300, path: './imgs/icons/devotion.png',
                                 debug: false,
-                                cooldown: 60
+                                cooldown: 60,
+                                hasCooldown: true
                             },
                             {
                                 name: "Divert", image: this.Buffs.Divert, threshold: 300, path: './imgs/icons/divert.png',
                                 debug: false,
-                                cooldown: 30
+                                cooldown: 30,
+                                hasCooldown: true
                             },
                             {
                                 name: "Freedom", image: this.Buffs.Freedom, threshold: 300, path: './imgs/icons/freedom.png',
                                 debug: false,
-                                cooldown: 30
+                                cooldown: 30,
+                                hasCooldown: true
                             },
                             {
                                 name: "Immortality", image: this.Buffs.Immortality, threshold: 300, path: './imgs/icons/immortality.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Reflect", image: this.Buffs.Reflect, threshold: 300, path: './imgs/icons/reflect.png',
                                 debug: false,
-                                cooldown: 30
+                                cooldown: 30,
+                                hasCooldown: true
                             },
                             {
                                 name: "Resonance", image: this.Buffs.Resonance, threshold: 300, path: './imgs/icons/resonance.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Split Soul", image: this.Buffs.SplitSoul, threshold: 350, path: './imgs/icons/split_soul.png',
                                 debug: false,
-                                cooldown: 60
+                                cooldown: 60,
+                                hasCooldown: true
                             },
                             {
                                 name: "Threads of Fate", image: this.Buffs.ThreadsOfFate, threshold: 300, path: './imgs/icons/threads_of_fate.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Conjure Skeleton", image: this.Buffs.ConjureSkeleton, threshold: 300, path: './imgs/icons/skeleton_warrior.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Conjure Zombie", image: this.Buffs.ConjureZombie, threshold: 300, path: './imgs/icons/putrid_zombie.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Conjure Ghost", image: this.Buffs.ConjureGhost, threshold: 300, path: './imgs/icons/vengeful_ghost.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Split Soul ECB", image: this.Buffs.SplitSoulECB, threshold: 60, path: './imgs/icons/split_soul_ecb.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Invoke Lord of Bones", image: this.Buffs.InvokeLordOfBones, threshold: 180, path: './imgs/icons/lord_of_bones.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Adren Crit", image: this.Buffs.adrenCrit, threshold: 300, path: './imgs/icons/adren_crit_buff.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Glacial Embrace", image: this.Buffs.glacialEmbrace, threshold: 60, path: './imgs/icons/glacial_embrace.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Blood Tithe", image: this.Buffs.bloodTithe, threshold: 60, path: './imgs/icons/blood_tithe.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             // --- DEBUFFS ---
                             {
                                 name: "Ancient Elven Ritual Shard", image: this.Debuffs.elvenRitualShard, threshold: 90, path: './imgs/buffs/Ancient_Elven_Ritual_Shard-noborder.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Adrenaline Potion Debuff", image: this.Debuffs.adrenalinePotion, threshold: 300, path: './imgs/buffs/Adrenaline_Potion-noborder.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Death Guard Debuff", image: this.Debuffs.deathGraspDebuff, threshold: 90, path: './imgs/icons/death_guard.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Omni Guard Debuff", image: this.Debuffs.deathEssenceDebuff, threshold: 60, path: './imgs/icons/omni_guard.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Enhanced Excalibur Debuff", image: this.Debuffs.enhancedExcaliburDebuff, threshold: 15, path: './imgs/icons/excalibur.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Crystal Rain Debuff", image: this.Debuffs.crystalRainMinimal, threshold: 60, path: './imgs/buffs/Crystal_Rain-minimal-noborder.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Stunned Debuff", image: this.Debuffs.stunnedDebuff, threshold: 60, path: './imgs/buffs/Stunned.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Sign of Life Debuff", image: this.Debuffs.signOfLifeDebuff, threshold: 20, path: './imgs/icons/sign_of_life.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Powerburst Prevention", image: this.Debuffs.powerburstPrevention, threshold: 20, path: './imgs/buffs/Powerburst_prevention.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Deathspore Arrows (Buff Bar)", image: this.Debuffs.FeastingSpores, threshold: 18, path: './imgs/buffs/deathspore_arrows.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Cannon Decay", image: this.Debuffs.cannon, threshold: 120, path: './imgs/icons/cannon.png', debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Familiar", image: this.Buffs.familiar, threshold: 160, path: './imgs/icons/familiar.png', debug: true,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             // --- ULTIMATES ---
                             {
                                 name: "Berserk", image: this.Ultimates.berserk, threshold: 200, path: './imgs/buffs/Berserk-noborder.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Deaths Swiftness", image: this.Ultimates.deathsSwiftness, threshold: 270, path: './imgs/icons/deaths_swiftness.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Greater Deaths Swiftness", image: this.Ultimates.greaterDeathsSwiftness, threshold: 450, path: "./imgs/buffs/Greater_Death's_Swiftness-noborder.data.png",
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Sunshine", image: this.Ultimates.sunshine, threshold: 500, path: './imgs/buffs/Sunshine-noborder.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Greater Sunshine", image: this.Ultimates.greaterSunshine, threshold: 100, path: './imgs/buffs/Greater_Sunshine-noborder.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             {
                                 name: "Living Death", image: this.Ultimates.livingDeath, threshold: 400, path: './imgs/buffs/Living_Death-noborder.data.png',
                                 debug: false,
-                                cooldown: 0
+                                cooldown: 0,
+                                hasCooldown: false
                             },
                             // --- SIGILS ---
                             {
                                 name: "Limitless", image: this.Sigils.limitless, threshold: 250, path: './imgs/buffs/Limitless-noborder.data.png',
                                 debug: false,
-                                cooldown: 90
+                                cooldown: 90,
+                                hasCooldown: true
                             },
                             {
                                 name: "Demon Slayer", image: this.Sigils.demonSlayer, threshold: 400, path: './imgs/buffs/Demon_Slayer-noborder.data.png',
                                 debug: false,
-                                cooldown: 60
+                                cooldown: 60,
+                                hasCooldown: true
                             },
                             {
                                 name: "Dragon Slayer", image: this.Sigils.dragonSlayer, threshold: 400, path: './imgs/buffs/Dragon_Slayer-noborder.data.png',
                                 debug: false,
-                                cooldown: 60
+                                cooldown: 60,
+                                hasCooldown: true
                             },
                             {
                                 name: "Undead Slayer", image: this.Sigils.undeadSlayer, threshold: 400, path: './imgs/buffs/Undead_Slayer-noborder.data.png',
                                 debug: false,
-                                cooldown: 60
+                                cooldown: 60,
+                                hasCooldown: true
                             },
                             {
                                 name: "Ingenuity of the Humans", image: this.Sigils.ingenuityOfTheHumans, threshold: 400, path: './imgs/buffs/Ingenuity_of_the_Humans-noborder.data.png',
                                 debug: false,
-                                cooldown: 90
+                                cooldown: 90,
+                                hasCooldown: true
                             },
                         ];
                         this.initialized = true;
@@ -8517,7 +8583,7 @@ var BuffManager = /** @class */ (function () {
         this.OVERLAY_GROUP = 'overlayGroup';
         this.TRACKED_BUFFS_KEY = 'trackedBuffs';
         this.getActiveBuffs = function () { return __awaiter(_this, void 0, void 0, function () {
-            var activeBuffs, activeDebuffs, buffsAndDebuffs, currentActiveBuffs_1, registeredBuffs, _i, buffsAndDebuffs_1, activeBuff, _a, registeredBuffs_1, buffData, matchResult, buffCooldown, existingBuff, newBuffCooldown, newProgress, newInitialCooldown, buffsArray;
+            var activeBuffs, activeDebuffs, buffsAndDebuffs, currentActiveBuffs_1, registeredBuffs, _i, buffsAndDebuffs_1, activeBuff, _a, registeredBuffs_1, buffData, matchResult, buffCooldown, existingBuff, newBuffCooldown, newProgress, newInitialCooldown, abilityCooldown, initialAbilityCooldown, abilityCooldownProgress, buffsArray;
             var _this = this;
             var _b, _c;
             return __generator(this, function (_d) {
@@ -8571,37 +8637,74 @@ var BuffManager = /** @class */ (function () {
                                         newInitialCooldown = existingBuff.initialBuffCooldown;
                                         newProgress = existingBuff.progress;
                                     }
+                                    abilityCooldown = void 0;
+                                    initialAbilityCooldown = void 0;
+                                    abilityCooldownProgress = void 0;
+                                    if (!existingBuff) {
+                                        // Brand new buff - start cooldown immediately
+                                        abilityCooldown = buffData.cooldown;
+                                        initialAbilityCooldown = buffData.cooldown;
+                                        abilityCooldownProgress = 100;
+                                    }
+                                    else if (existingBuff.buffCooldown === 0 && buffData.hasCooldown) {
+                                        // Buff reactivated after expiring - start cooldown fresh if cooldown finished or was never started
+                                        if (existingBuff.cooldown === 0 || existingBuff.initialiCooldown === 0) {
+                                            abilityCooldown = buffData.cooldown;
+                                            initialAbilityCooldown = buffData.cooldown;
+                                            abilityCooldownProgress = 100;
+                                        }
+                                        else {
+                                            // Cooldown still ticking, keep it
+                                            abilityCooldown = existingBuff.cooldown;
+                                            initialAbilityCooldown = existingBuff.initialiCooldown;
+                                            abilityCooldownProgress = existingBuff.cooldownProgress;
+                                        }
+                                    }
+                                    else {
+                                        // Buff still active - keep existing cooldown state
+                                        abilityCooldown = existingBuff.cooldown;
+                                        initialAbilityCooldown = existingBuff.initialiCooldown;
+                                        abilityCooldownProgress = existingBuff.cooldownProgress;
+                                    }
                                     this.matchedBuffsCache.set(buffData.name, {
                                         name: buffData.name,
                                         imagePath: buffData.path,
                                         buffCooldown: newBuffCooldown,
-                                        inactive: false,
                                         lastUpdate: (existingBuff === null || existingBuff === void 0 ? void 0 : existingBuff.lastUpdate) || Date.now(),
                                         progress: newProgress,
                                         initialBuffCooldown: newInitialCooldown,
-                                        isPinned: (existingBuff === null || existingBuff === void 0 ? void 0 : existingBuff.isPinned) || false, isAudioQueued: (existingBuff === null || existingBuff === void 0 ? void 0 : existingBuff.isAudioQueued) || false, order: (_c = existingBuff === null || existingBuff === void 0 ? void 0 : existingBuff.order) !== null && _c !== void 0 ? _c : 999,
-                                        cooldown: 0,
-                                        cooldownProgress: 0,
-                                        initialiCooldown: 0
+                                        isPinned: (existingBuff === null || existingBuff === void 0 ? void 0 : existingBuff.isPinned) || false,
+                                        isAudioQueued: (existingBuff === null || existingBuff === void 0 ? void 0 : existingBuff.isAudioQueued) || false,
+                                        order: (_c = existingBuff === null || existingBuff === void 0 ? void 0 : existingBuff.order) !== null && _c !== void 0 ? _c : 999,
+                                        cooldown: abilityCooldown,
+                                        cooldownProgress: abilityCooldownProgress,
+                                        initialiCooldown: initialAbilityCooldown,
+                                        hasCooldown: buffData.hasCooldown
                                     });
                                     break;
                                 }
                             }
                         }
-                        // Mark buffs as inactive if they're no longer detected
+                        // Start cooldowns for buffs no longer detected
                         Array.from(this.matchedBuffsCache.keys()).forEach(function (buffName) {
                             if (!currentActiveBuffs_1.has(buffName)) {
                                 var buff = _this.matchedBuffsCache.get(buffName);
-                                if (buff) {
-                                    buff.inactive = true;
+                                if (buff && buff.buffCooldown > 0) {
+                                    // Mark buff as expired
+                                    buff.buffCooldown = 0;
+                                    buff.progress = 0;
                                 }
                             }
                         });
                     }
                     else {
-                        // No active buffs, mark all as inactive
+                        // No active buffs, expire all
                         Array.from(this.matchedBuffsCache.values()).forEach(function (buff) {
-                            buff.inactive = true;
+                            if (buff.buffCooldown > 0) {
+                                // Mark buff as expired
+                                buff.buffCooldown = 0;
+                                buff.progress = 0;
+                            }
                         });
                     }
                     this.saveCachedBuffs();
@@ -8624,15 +8727,28 @@ var BuffManager = /** @class */ (function () {
             var now = Date.now();
             Array.from(_this.matchedBuffsCache.values()).forEach(function (buff) {
                 var elapsed = Math.floor((now - buff.lastUpdate) / 1000);
-                if (elapsed > 0 && buff.buffCooldown > 0) {
-                    buff.buffCooldown = Math.max(0, buff.buffCooldown - elapsed);
+                if (elapsed > 0) {
+                    // Update buff duration
+                    if (buff.buffCooldown > 0) {
+                        buff.buffCooldown = Math.max(0, buff.buffCooldown - elapsed);
+                        if (buff.initialBuffCooldown > 0) {
+                            buff.progress = Math.max(0, (buff.buffCooldown / buff.initialBuffCooldown) * 100);
+                        }
+                        else {
+                            buff.progress = 0;
+                        }
+                    }
+                    // Update ability cooldown
+                    if (buff.cooldown > 0) {
+                        buff.cooldown = Math.max(0, buff.cooldown - elapsed);
+                        if (buff.initialiCooldown > 0) {
+                            buff.cooldownProgress = Math.max(0, (buff.cooldown / buff.initialiCooldown) * 100);
+                        }
+                        else {
+                            buff.cooldownProgress = 0;
+                        }
+                    }
                     buff.lastUpdate = now;
-                    if (buff.initialBuffCooldown > 0) {
-                        buff.progress = Math.max(0, (buff.buffCooldown / buff.initialBuffCooldown) * 100);
-                    }
-                    else {
-                        buff.progress = 0;
-                    }
                 }
             });
         };
@@ -8642,7 +8758,11 @@ var BuffManager = /** @class */ (function () {
                 isPinned: buff.isPinned,
                 isAudioQueued: buff.isAudioQueued,
                 order: buff.order,
-                imagePath: buff.imagePath
+                imagePath: buff.imagePath,
+                cooldown: buff.cooldown,
+                cooldownProgress: buff.cooldownProgress,
+                initialiCooldown: buff.initialiCooldown,
+                hasCooldown: buff.hasCooldown
             }); });
             _this.storage.save(_this.TRACKED_BUFFS_KEY, buffsArray);
         };
@@ -8656,16 +8776,16 @@ var BuffManager = /** @class */ (function () {
                         name: buff.name,
                         imagePath: buff.imagePath || '',
                         buffCooldown: 0,
-                        inactive: true,
                         lastUpdate: Date.now(),
                         progress: 0,
                         initialBuffCooldown: 0,
                         isPinned: buff.isPinned,
                         isAudioQueued: buff.isAudioQueued,
-                        cooldown: 0,
-                        cooldownProgress: 0,
-                        initialiCooldown: 0,
-                        order: (_a = buff.order) !== null && _a !== void 0 ? _a : 999
+                        cooldown: buff.cooldown || 0,
+                        cooldownProgress: buff.cooldownProgress || 0,
+                        initialiCooldown: buff.initialiCooldown || 0,
+                        order: (_a = buff.order) !== null && _a !== void 0 ? _a : 999,
+                        hasCooldown: buff.hasCooldown
                     });
                 });
             }
@@ -9872,7 +9992,7 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
     checkAndPlayAlerts: function () {
         var _this = this;
         this.buffs.forEach(function (buff) {
-            var isFlashing = buff.progress <= 30 && !buff.inactive && buff.cooldown <= 60;
+            var isFlashing = buff.progress <= 30 && buff.buffCooldown > 0 && buff.buffCooldown <= 60;
             if (isFlashing && buff.isAudioQueued && buff.isPinned && !_this.alertedBuffs.has(buff.name)) {
                 // Play alert sound
                 _this.audio.currentTime = 0;
