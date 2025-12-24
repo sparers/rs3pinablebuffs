@@ -47,7 +47,7 @@
             <template x-for="(buff, index) in buffs" :key="buff.name">
               <div
                 class="buff-row"
-                :class="{ 'disabled': buff.inactive, 'exclude-me': !buff.isPinned }"
+                :class="{ 'exclude-me': !buff.isPinned }"
                 :data-buff-name="buff.name"
                 draggable="true"
                 @dragstart="onDragStart($event, index)"
@@ -59,13 +59,20 @@
                   <img class="buff-icon-img" :src="buff.imagePath" :alt="buff.name" />
                 </div>
                 <div class="tracks-container">
-                  <div class="buff-bar-track cooldown" x-show="buff.cooldown > 0">
+                  <div
+                    class="buff-bar-track cooldown"
+                    :class="{'disabled': buff.cooldown === 0, 'flashing': buff.cooldownProgress <= 10 && buff.buffCooldown === 0 && buff.cooldown <= 5 }"
+                    x-show="buff.hasCooldown"
+                  >
                     <div class="bar-fill cooldown-fill" :style="{ width: buff.cooldownProgress + '%' }"></div>
                     <span class="buff-label">
                       <span class="buff-timer" x-text="formatTime(buff.cooldown)"></span>
                     </span>
                   </div>
-                  <div class="buff-bar-track" :class="{ 'flashing': buff.progress <= 30 && !buff.inactive && buff.cooldown <= 60 }">
+                  <div
+                    class="buff-bar-track"
+                    :class="{ 'disabled': buff.buffCooldown === 0, 'flashing': buff.progress <= 30 && buff.buffCooldown > 0 && buff.buffCooldown <= 60 }"
+                  >
                     <div class="bar-fill adren-fill" :style="{ width: buff.progress + '%' }"></div>
                     <span class="buff-label">
                       <span class="buff-name" x-text="buff.name"></span>
