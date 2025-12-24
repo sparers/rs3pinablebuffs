@@ -2,6 +2,10 @@
 
 Track and pin your RuneScape 3 buffs with a customizable overlay.
 
+## Community
+
+Join our Discord: https://discord.gg/3A3kE8Pjvp
+
 ## Installation
 
 Install directly in Alt1 Toolkit:
