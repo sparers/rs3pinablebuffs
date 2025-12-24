@@ -229,6 +229,7 @@ export class BuffManager {
         quality: 1,
         pixelRatio: 1.5,
         skipAutoScale: false,
+        imagePlaceholder: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect width="32" height="32" fill="%23ddd"/><text x="16" y="16" text-anchor="middle" dy=".3em" font-size="10" fill="%23999">?</text></svg>',
         filter: filter,
         style: {
           transform: 'none',

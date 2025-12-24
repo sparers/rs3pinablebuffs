@@ -278,7 +278,6 @@ p.version {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #222;
   border: 2px solid #555;
   display: flex;
   align-items: center;
@@ -287,6 +286,7 @@ p.version {
   font-size: 18px;
   z-index: 2;
   overflow: hidden;
+  background-color: #222;
 }
 
 .stat-icon.buff-icon {
