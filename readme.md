@@ -7,7 +7,7 @@ Track and pin your RuneScape 3 buffs with a customizable overlay.
 Install directly in Alt1 Toolkit:
 
 ```
-alt1://addapp/https://sparers.github.io/rs3-pinnable-buffs/appconfig.json
+alt1://addapp/https://sparers.github.io/rs3pinablebuffs/appconfig.json
 ```
 
 ![alt text](image.png)
