@@ -311,7 +311,7 @@ export class BuffImageRegistry {
         name: "Deathspore Arrows (Buff Bar)", image: this.Debuffs.FeastingSpores, threshold: 18, path: './imgs/buffs/deathspore_arrows.data.png',
         debug: false
       },
-      { name: "Cannon Decay", image: this.Debuffs.cannon, threshold: 120, path: './imgs/icons/cannonball.png', debug: false },
+      { name: "Cannon Decay", image: this.Debuffs.cannon, threshold: 120, path: './imgs/icons/cannon.png', debug: false },
       { name: "Familiar", image: this.Buffs.familiar, threshold: 160, path: './imgs/icons/familiar.png', debug: true },
 
 
