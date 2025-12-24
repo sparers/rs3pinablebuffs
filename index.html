@@ -7,64 +7,149 @@
   <body class="nis">
     <div id="output"></div>
     <div id="settings" class="hidden" x-data="buffsData">
-      <div class="header-buttons">
-        <button x-on:click="setOverlayPosition()" class="nisbutton">Set overlay</button>
-        <a href="https://discord.gg/3A3kE8Pjvp" target="_blank" class="nisbutton discord"> Discord </a>
+      <div class="tabs">
+        <button class="tab-button" :class="{ 'active': activeTab === 'buffs' }" @click="activeTab = 'buffs'">
+          <svg viewBox="0 0 24 24" class="tab-icon" fill="currentColor">
+            <path
+              d="M12,2A7,7 0 0,1 19,9C19,11.38 17.81,13.47 16,14.74V17A1,1 0 0,1 15,18H9A1,1 0 0,1 8,17V14.74C6.19,13.47 5,11.38 5,9A7,7 0 0,1 12,2M9,21V20H15V21A1,1 0 0,1 14,22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,11.05 8.23,12.81 10,13.58V16H14V13.58C15.77,12.81 17,11.05 17,9A5,5 0 0,0 12,4Z"
+            />
+          </svg>
+          Buffs
+        </button>
+        <button class="tab-button" :class="{ 'active': activeTab === 'settings' }" @click="activeTab = 'settings'">
+          <svg viewBox="0 0 24 24" class="tab-icon" fill="currentColor">
+            <path
+              d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+            />
+          </svg>
+          Settings
+        </button>
+        <button class="tab-button" :class="{ 'active': activeTab === 'info' }" @click="activeTab = 'info'">
+          <svg viewBox="0 0 24 24" class="tab-icon" fill="currentColor">
+            <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+          </svg>
+          Info
+        </button>
       </div>
-      <p>
-        [Info] Buffs with duration ≤59s update in real-time. Buffs >60s (e.g., 5 minutes) start counting down once the game updates their timer (e.g., when it
-        changes from 5m to 4m59s).
-      </p>
-      <h2>Buff history</h2>
-      <div id="buffs-output">
-        <template x-for="(buff, index) in buffs" :key="buff.name">
-          <div
-            class="buff-row"
-            :class="{ 'disabled': buff.inactive, 'exclude-me': !buff.isPinned }"
-            :data-buff-name="buff.name"
-            draggable="true"
-            @dragstart="onDragStart($event, index)"
-            @dragend="onDragEnd($event)"
-            @dragover="onDragOver($event)"
-            @drop="onDrop($event, index)"
-          >
-            <div class="stat-icon buff-icon">
-              <img class="buff-icon-img" :src="buff.imagePath" :alt="buff.name" />
-            </div>
-            <div class="buff-bar-track" :class="{ 'flashing': buff.progress <= 30 && !buff.inactive && buff.cooldown <= 60 }">
-              <div class="bar-fill adren-fill" :style="{ width: buff.progress + '%' }"></div>
-              <span class="buff-label">
-                <span class="buff-name" x-text="buff.name"></span>
-                <span class="buff-timer" x-text="formatTime(buff.cooldown)"></span>
-              </span>
-            </div>
-            <button
-              class="pin-button exclude-me"
-              :class="{ 'pinned': buff.isPinned }"
-              @click="togglePin(buff.name)"
-              type="button"
-              :aria-label="buff.isPinned ? 'Unpin buff' : 'Pin buff'"
-            >
-              <svg viewBox="0 0 24 24" class="pin-icon" fill="currentColor">
-                <path d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12Z" />
-              </svg>
-            </button>
-            <button
-              class="audio-button exclude-me"
-              :class="{ 'queued': buff.isAudioQueued }"
-              @click="toggleAudioQueue(buff.name)"
-              type="button"
-              :aria-label="buff.isAudioQueued ? 'Remove from audio queue' : 'Add to audio queue'"
-            >
-              <svg viewBox="0 0 24 24" class="audio-icon" fill="currentColor">
-                <path
-                  d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"
-                />
-              </svg>
-            </button>
+
+      <div class="tab-content" x-show="activeTab === 'buffs'">
+        <div id="buffs-output">
+          <div x-show="buffs.length === 0" class="empty-placeholder">
+            <svg viewBox="0 0 24 24" class="placeholder-icon" fill="currentColor">
+              <path
+                d="M12,2A7,7 0 0,1 19,9C19,11.38 17.81,13.47 16,14.74V17A1,1 0 0,1 15,18H9A1,1 0 0,1 8,17V14.74C6.19,13.47 5,11.38 5,9A7,7 0 0,1 12,2M9,21V20H15V21A1,1 0 0,1 14,22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,11.05 8.23,12.81 10,13.58V16H14V13.58C15.77,12.81 17,11.05 17,9A5,5 0 0,0 12,4Z"
+              />
+            </svg>
+            <h3>No Buffs Tracked</h3>
+            <p>Active buffs will appear here once detected in-game.</p>
+            <p class="hint">Make sure Alt1 is running and you're in RuneScape 3.</p>
           </div>
-        </template>
+          <div class="settings-section">
+            <template x-for="(buff, index) in buffs" :key="buff.name">
+              <div
+                class="buff-row"
+                :class="{ 'disabled': buff.inactive, 'exclude-me': !buff.isPinned }"
+                :data-buff-name="buff.name"
+                draggable="true"
+                @dragstart="onDragStart($event, index)"
+                @dragend="onDragEnd($event)"
+                @dragover="onDragOver($event)"
+                @drop="onDrop($event, index)"
+              >
+                <div class="stat-icon buff-icon">
+                  <img class="buff-icon-img" :src="buff.imagePath" :alt="buff.name" />
+                </div>
+                <div class="buff-bar-track" :class="{ 'flashing': buff.progress <= 30 && !buff.inactive && buff.cooldown <= 60 }">
+                  <div class="bar-fill adren-fill" :style="{ width: buff.progress + '%' }"></div>
+                  <span class="buff-label">
+                    <span class="buff-name" x-text="buff.name"></span>
+                    <span class="buff-timer" x-text="formatTime(buff.cooldown)"></span>
+                  </span>
+                </div>
+                <button
+                  class="pin-button exclude-me"
+                  :class="{ 'pinned': buff.isPinned }"
+                  @click="togglePin(buff.name)"
+                  type="button"
+                  :aria-label="buff.isPinned ? 'Unpin buff' : 'Pin buff'"
+                >
+                  <svg viewBox="0 0 24 24" class="pin-icon" fill="currentColor">
+                    <path d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12Z" />
+                  </svg>
+                </button>
+                <button
+                  class="audio-button exclude-me"
+                  :class="{ 'queued': buff.isAudioQueued }"
+                  @click="toggleAudioQueue(buff.name)"
+                  type="button"
+                  :aria-label="buff.isAudioQueued ? 'Remove from audio queue' : 'Add to audio queue'"
+                >
+                  <svg viewBox="0 0 24 24" class="audio-icon" fill="currentColor">
+                    <path
+                      d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </template>
+          </div>
+        </div>
       </div>
+
+      <div class="tab-content" x-show="activeTab === 'settings'">
+        <div class="settings-section">
+          <p>To set the overlay click tyhe button above go to your desired location and press alt + 1.</p>
+          <div class="header-buttons">
+            <button x-on:click="setOverlayPosition()" class="nisbutton">Set overlay position</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <p class="warning-text">Clear all cached data including tracked buffs, pins, audio queue settings, and overlay position.</p>
+          <div class="header-buttons">
+            <button x-on:click="resetSettings()" class="nisbutton">Reset All Settings</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Todo</h3>
+          <ul>
+            <li>Profile saving/switching, right now there is just a self managed global profile.</li>
+            <li>Ability to choose from multiple audio queues</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tab-content" x-show="activeTab === 'info'">
+        <div class="settings-section">
+          <p>
+            Buffs with duration ≤59s update in real-time. Buffs >60s (e.g., 5 minutes) start counting down once the game updates their timer (e.g., when it
+            changes from 5m to 4m59s).
+          </p>
+          <p>
+            For more info join our
+            <a href="https://discord.gg/3A3kE8Pjvp" target="_blank" class="warning-text"
+              ><svg viewBox="0 0 24 24" class="inline-icon" fill="currentColor" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px">
+                <path
+                  d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"
+                /></svg></a
+            >, let's grow a community.
+          </p>
+        </div>
+      </div>
+      <p class="version">
+        <a href="https://github.com/sparers/rs3pinablebuffs" target="_blank"
+          ><svg viewBox="0 0 24 24" class="inline-icon" fill="currentColor" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px">
+            <path
+              d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"
+            /></svg
+        ></a>
+        <a href="https://discord.gg/3A3kE8Pjvp" target="_blank" class="warning-text"
+          ><svg viewBox="0 0 24 24" class="inline-icon" fill="currentColor" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px">
+            <path
+              d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"
+            /></svg
+        ></a>
+      </p>
     </div>
 
     <script src="./main.js"></script>
