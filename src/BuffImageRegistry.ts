@@ -52,6 +52,7 @@ export class BuffImageRegistry {
       adrenCrit: require('./imgs/buffs/Adren_Crit_Buff.data.png'),
       glacialEmbrace: require('./imgs/buffs/Glacial_Embrace-noborder.data.png'),
       bloodTithe: require('./imgs/buffs/Blood_Tithe-noborder.data.png'),
+      familiar: require('./imgs/buffs/familiar-top.data.png'),
     }).promise;
 
     this.Incense = await a1lib.webpackImages({
@@ -310,7 +311,8 @@ export class BuffImageRegistry {
         name: "Deathspore Arrows (Buff Bar)", image: this.Debuffs.FeastingSpores, threshold: 18, path: './imgs/buffs/deathspore_arrows.data.png',
         debug: false
       },
-      { name: "Cannon Decay", image: this.Debuffs.cannon, threshold: 120, path: './imgs/icons/cannonball.png', debug: true },
+      { name: "Cannon Decay", image: this.Debuffs.cannon, threshold: 120, path: './imgs/icons/cannonball.png', debug: false },
+      { name: "Familiar", image: this.Buffs.familiar, threshold: 160, path: './imgs/icons/familiar.png', debug: true },
 
 
       // --- ULTIMATES ---
