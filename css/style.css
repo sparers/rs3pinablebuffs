@@ -174,7 +174,6 @@ p.version {
   padding: 20px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid #333;
-  border-radius: 8px;
 }
 
 .settings-section h3 {
@@ -226,7 +225,6 @@ p.version {
   background-color: #5865F2;
   color: white;
   border: 1px solid #4752C4;
-  border-radius: 4px;
   font-family: inherit;
   font-size: 14px;
   cursor: pointer;
@@ -262,7 +260,6 @@ p.version {
   padding: 10px 20px;
   border-top: 2px solid #555;
   border-bottom: 2px solid #000;
-  border-radius: 4px;
 }
 
 /* Individual Stat Unit */
@@ -278,7 +275,6 @@ p.version {
 .stat-icon {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
   border: 2px solid #555;
   display: flex;
   align-items: center;
@@ -315,9 +311,8 @@ p.version {
 .bar-track {
   width: 100%;
   height: 12px;
-  background: #000;
+  background-color: #171e24;
   border: 1px solid #444;
-  border-radius: 8px;
   position: relative;
   overflow: hidden;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
@@ -327,7 +322,6 @@ p.version {
 .bar-fill {
   height: 100%;
   width: 100%;
-  border-radius: 8px;
   transition: width 0.3s ease-out;
   position: relative;
   background: #000;
@@ -341,7 +335,6 @@ p.version {
   right: 0;
   height: 50%;
   background: rgba(255, 255, 255, 0.15);
-  border-radius: 6px 6px 0 0;
 }
 
 .hp-fill {
@@ -366,7 +359,6 @@ p.version {
   flex-direction: column;
   gap: 5px;
   align-items: flex-start;
-  border-radius: 4px;
   padding: 10px;
   margin-bottom: 20px;
 }
@@ -374,7 +366,7 @@ p.version {
 .buff-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   margin-bottom: 20px;
   cursor: move;
   transition: opacity 0.2s, transform 0.2s;
@@ -392,8 +384,7 @@ p.version {
 }
 
 .disabled {
-  opacity: 0.5;
-  filter: grayscale(100%);
+  /* filter: grayscale(100%); */
 }
 
 .buff-row.dragging {
@@ -403,11 +394,10 @@ p.version {
 
 .buff-row:hover:not(.dragging) {
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
 }
 
 .buff-icon-img {
-  height: 32px;
+  height: 42px;
 }
 
 .tracks-container {
@@ -416,24 +406,22 @@ p.version {
   gap: 5px;
 }
 
-.tracks-container .cooldown {
-  height: 8px;
+.buff-bar-track.cooldown {
+  height: 11px;
 }
 
 .tracks-container .cooldown .buff-label {
-  font-size: 10px;
+  font-size: 8px;
   top: -4px;
 }
 
 .buff-bar-track {
   width: 150px;
   height: 16px;
-  /* Increased height for label */
-  background: #000 !important;
   border: 1px solid #444;
+  display: flex;
   position: relative;
-  /* For label overlay */
-  border-radius: 8px;
+  background-color: #171e24;
 }
 
 .buff-bar-fill {
@@ -454,26 +442,14 @@ p.version {
   height: 48px;
 }
 
-@keyframes flash-animation {
-  0% {
-    background-color: rgba(255, 255, 255, 1);
-    opacity: 1;
-  }
-
-  100% {
-    background-color: rgba(255, 255, 255, 0);
-    opacity: 0;
-  }
-}
-
 .stat-icon.large .buff-icon-img {
   height: 48px;
 }
 
 .buff-label {
-  position: absolute;
-  top: 0;
-  padding: 0 4px;
+  display: flex;
+  justify-content: space-between;
+
   width: 100%;
   font-size: 10px;
   line-height: 16px;
@@ -481,23 +457,23 @@ p.version {
   text-shadow: 1px 1px 1px black;
   pointer-events: none;
   font-weight: bold;
+  padding: 0 2px;
+  align-items: center;
 }
 
 .buff-name {
-  display: inline-block;
   width: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-wrap: none;
   white-space: nowrap;
+  /* Text naturally aligns left, so no change needed here */
 }
 
 .buff-timer {
-  font-family: monospace;
-  font-size: 12px;
+  font-size: 10px;
   width: 35px;
-  position: absolute;
-  right: 10px;
+  /* Ensures the text inside the timer div is right-aligned */
+  text-align: right;
 }
 
 /* Divider decoration between stats */
@@ -536,7 +512,6 @@ p.version {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  border-radius: 4px;
 }
 
 .pin-button:hover {
@@ -574,7 +549,6 @@ p.version {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  border-radius: 4px;
   margin-left: 4px;
 }
 
