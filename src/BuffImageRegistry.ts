@@ -19,7 +19,7 @@ export class BuffImageRegistry {
       supremeOverloadActive: require('./imgs/buffs/Supreme_Overload_Potion_Active-noborder.data.png'),
       fsoaWeaponSpec: require('./imgs/buffs/fsoaSpecBuff-noborder.data.png'),
       gladiatorsRage: require('./imgs/buffs/Gladiators_Rage-noborder.data.png'),
-      necrosis: require('./imgs/buffs/Necrosis-noborder.data.png'),
+      //necrosis: require('./imgs/buffs/Necrosis-noborder.data.png'),
       overloaded: require('./imgs/buffs/Overloaded-noborder.data.png'),
       supreme_overloaded: require('./imgs/buffs/supreme_overload.data.png'),
       balanceByForce: require('./imgs/buffs/balance_by_force-beta.data.png'),
@@ -165,13 +165,13 @@ export class BuffImageRegistry {
         hasAbilityCooldown: false,
         isTarget: false
       },
-      {
-        name: "Necrosis", image: this.Buffs.necrosis, threshold: 150, path: './imgs/icons/necrosis.png',
-        debug: false,
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false
-      },
+      // {
+      //   name: "Necrosis", image: this.Buffs.necrosis, threshold: 150, path: './imgs/icons/necrosis.png',
+      //   debug: false,
+      //   abilityCooldown: 0,
+      //   hasAbilityCooldown: false,
+      //   isTarget: false
+      // },
       {
         name: "Aura", image: this.Buffs.aura, threshold: 400, path: './imgs/icons/equilibrium_aura.png',
         debug: false,
