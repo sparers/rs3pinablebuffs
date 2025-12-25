@@ -110,10 +110,10 @@
               </div>
             </template>
           </div>
-          <div class="settings-section" x-show="hasAlertedBuffs()" id="alerted-buffs">
+          <div class="settings-section" x-show="hasAlertedBuffs() || true" id="alerted-buffs">
               <div class="alerted-buffs-row">
                 <template x-for="(buff, index) in buffs" :key="buff.name">
-                    <div class="stat-icon buff-icon large" x-show="isAlerted(buff.name)">
+                    <div class="stat-icon buff-icon large" x-show="isAlerted(buff.name) || true">
                       <img class="buff-icon-img" :src="buff.imagePath" :alt="buff.name" />
                       <span class="timer" x-text="parseInt(buff.abilityCooldown)"></span>
                     </div>

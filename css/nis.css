@@ -20,14 +20,14 @@
 .nisborder {
     border-width: 4px;
     border-style: solid;
-    -moz-border-image: url('/nis/alt1-currentskin/borderSprite.png') 4 repeat;
-    border-image: url('/nis/alt1-currentskin/borderSprite.png') 4 repeat;
-    background: url('/nis/alt1-currentskin/background.png');
+    -moz-border-image: url('./default/borderSprite.png') 4 repeat;
+    border-image: url('./default/borderSprite.png') 4 repeat;
+    background: url('./default/background.png');
     overflow: hidden;
 }
 
 .nisexitbutton {
-    background: url('/nis/alt1-currentskin/exitSprite.png');
+    background: url('./default/exitSprite.png');
     position: absolute;
     top: -4px;
     right: -4px;
@@ -58,7 +58,7 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    background-image: url("/nis/alt1-currentskin/buttonsmall.png");
+    background-image: url("./default/buttonsmall.png");
     background-size: auto 42px;
 }
 
@@ -117,7 +117,7 @@
     height: 20px;
     border: 3px solid #212B2D;
     box-sizing: border-box;
-    border-image: url('/nis/alt1-currentskin/imgbutton.png') 3 fill;
+    border-image: url('/default/imgbutton.png') 3 fill;
     cursor: pointer;
 }
 
@@ -155,7 +155,7 @@
     text-align: center;
     color: #BBB;
     cursor: pointer;
-    background: url('/nis/alt1-currentskin/tabback.png') 0 0 / 100% 100%;
+    background: url('/default/tabback.png') 0 0 / 100% 100%;
     position: relative;
     margin-left: -14px;
     z-index: 11;
@@ -206,7 +206,7 @@
 .nisbutton {
     height: 32px;
     position: relative;
-    background: url('/nis/alt1-currentskin/nisbutton.png') 0px -100%/24px 400% repeat content-box;
+    background: url('./default/nisbutton.png') 0px -100%/24px 400% repeat content-box;
     cursor: pointer;
     text-align: center;
     color: #000;
@@ -226,7 +226,7 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    background: url('/nis/alt1-currentskin/nisbutton.png') 0px 0px / 24px 400%;
+    background: url('./default/nisbutton.png') 0px 0px / 24px 400%;
 }
 
 .nisbutton::after {
@@ -236,7 +236,7 @@
     position: absolute;
     top: 0px;
     right: 0px;
-    background: url('/nis/alt1-currentskin/nisbutton.png') -12px 0px / 24px 400%;
+    background: url('./default/nisbutton.png') -12px 0px / 24px 400%;
 }
 
 .nisbutton:hover {
@@ -285,7 +285,7 @@
 }
 
 body.nis {
-    background-image: url('/nis/alt1-currentskin/background.png');
+    background-image: url('./default/background.png');
     background-color: var(--nis-col-back);
     overflow: hidden;
     margin: 0px;
@@ -297,7 +297,7 @@ body.nis {
 .nisclosebutton {
     width: 12px;
     height: 12px;
-    background: url('/nis/alt1-currentskin/exitSprite.png');
+    background: url('./default/exitSprite.png');
     cursor: pointer;
 }
 
@@ -374,9 +374,6 @@ body.nis *:not(.normalscroll)::-webkit-scrollbar-corner {
 body.scrollreset * {
     overflow: hidden !important;
 }
-
-
-
 
 /*font stolen from jagex*/
 @font-face {
