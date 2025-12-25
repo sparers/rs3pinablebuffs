@@ -1,6 +1,6 @@
 {
 	"appName": "PinableBuffs",
-	"description": "Simple app that tracks and let you pin the buffs.",
+	"description": "Simple app that tracks buffs/debufss/cooldowns and let you pin them.",
 	"appUrl": "./index.html",
 	"configUrl": "./appconfig.json",
 	"iconUrl": "./icon.png",
