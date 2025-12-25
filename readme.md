@@ -14,7 +14,7 @@ Install directly in Alt1 Toolkit:
 alt1://addapp/https://sparers.github.io/rs3pinablebuffs/appconfig.json
 ```
 
-![alt text](image.png)
+![alt text](image.png?v=1)
 
 ## Development
 
