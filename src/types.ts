@@ -43,4 +43,10 @@ export interface OverlayPosition {
     y: number;
 }
 
+export interface OverlaySettings {
+    scale: number;
+    buffCooldownThreshold: number;
+    abilityCooldownThreshold: number;
+}
+
 export type ImageCollection = Record<string, ImgRef>;

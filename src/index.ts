@@ -8,6 +8,7 @@ import { BuffManager } from './BuffManager';
 import "./icon.png";
 import "./index.html";
 import { LocalStorageHelper } from './LocalStorageHelper';
+import { OverlaySettings } from './types';
 
 const storage = new LocalStorageHelper();
 const buffManager = new BuffManager(storage);
@@ -40,6 +41,16 @@ Alpine.data('buffsData', () => ({
   activeTab: 'buffs',
   timestamp: null,
   lastUpdate: Date.now(),
+  overlaySettings: {
+    scale: 1,
+    buffCooldownThreshold: 30,
+    abilityCooldownThreshold: 5
+  },
+  overlaySettingsForm: {
+    scale: 1,
+    buffCooldownThreshold: 30,
+    abilityCooldownThreshold: 5
+  },
 
   formatTime(seconds: number): string {
     const mins = Math.floor(seconds / 60);
@@ -69,6 +80,40 @@ Alpine.data('buffsData', () => ({
 
   setOverlayPosition(group: string) {
     buffManager.setOverlayPosition(group);
+  },
+
+  saveOverlaySettings() {
+    // Validate and copy form values to actual settings
+    this.overlaySettings.scale = Math.max(1, Math.min(3, this.overlaySettingsForm.scale));
+    this.overlaySettings.buffCooldownThreshold = Math.max(1, Math.min(60, this.overlaySettingsForm.buffCooldownThreshold));
+    this.overlaySettings.abilityCooldownThreshold = Math.max(1, Math.min(60, this.overlaySettingsForm.abilityCooldownThreshold));
+
+    // Update form with clamped values
+    this.overlaySettingsForm.scale = this.overlaySettings.scale;
+    this.overlaySettingsForm.buffCooldownThreshold = this.overlaySettings.buffCooldownThreshold;
+    this.overlaySettingsForm.abilityCooldownThreshold = this.overlaySettings.abilityCooldownThreshold;
+
+    storage.save('overlaySettings', this.overlaySettings);
+  },
+
+  loadOverlaySettings() {
+    const saved = storage.get<OverlaySettings>('overlaySettings');
+    if (saved) {
+      this.overlaySettings = {
+        scale: saved.scale ?? 1,
+        buffCooldownThreshold: saved.buffCooldownThreshold ?? 30,
+        abilityCooldownThreshold: saved.abilityCooldownThreshold ?? 5
+      };
+    } else {
+      this.overlaySettings = {
+        scale: 1,
+        buffCooldownThreshold: 30,
+        abilityCooldownThreshold: 5
+      };
+      storage.save('overlaySettings', this.overlaySettings);
+    }
+    // Copy to form
+    this.overlaySettingsForm = { ...this.overlaySettings };
   },
 
   resetSettings() {
@@ -123,12 +168,12 @@ Alpine.data('buffsData', () => ({
   },
 
   isLowBuffCooldown(buff) {
-    const isLowBuffCooldown = buff.progress <= 30 && buff.buffCooldown > 0 && buff.buffCooldown <= 60;
+    const isLowBuffCooldown = buff.progress <= this.overlaySettings.buffCooldownThreshold && buff.buffCooldown > 0 && buff.buffCooldown <= 60;
     return isLowBuffCooldown;
   },
 
   isLowCooldown(buff) {
-    const isLowCooldown = buff.cooldown <= 5 && buff.cooldown > 0;
+    const isLowCooldown = buff.cooldown <= this.overlaySettings.abilityCooldownThreshold && buff.cooldown > 0;
     return isLowCooldown;
   },
 
@@ -172,6 +217,7 @@ Alpine.data('buffsData', () => ({
   },
 
   async init() {
+    this.loadOverlaySettings();
     const updateLoop = async () => {
       // Skip update if user is dragging buffs
       if (!this.isDragging && !this.resetInprogress) {
@@ -184,8 +230,9 @@ Alpine.data('buffsData', () => ({
         // Wait for Alpine to update the DOM
         await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-        await captureElementAsOverlay("buffs-output", BUFFS_OVERLAY_GROUP);
-        await captureElementAsOverlay("alerted-buffs", CENTER_OVERLAY_GROUP);
+        const scale = this.overlaySettings.scale;
+        await captureElementAsOverlay("buffs-output", BUFFS_OVERLAY_GROUP, scale);
+        await captureElementAsOverlay("alerted-buffs", CENTER_OVERLAY_GROUP, scale);
       }
       setTimeout(updateLoop, 150);
     };
@@ -193,7 +240,7 @@ Alpine.data('buffsData', () => ({
   }
 }));
 
-async function captureElementAsOverlay(elementId: string, overlayGroup: string) {
+async function captureElementAsOverlay(elementId: string, overlayGroup: string, scale: number) {
   const container = document.getElementById(elementId) as HTMLElement;
   if (!container) return;
 
@@ -215,7 +262,7 @@ async function captureElementAsOverlay(elementId: string, overlayGroup: string) 
     })
   );
 
-  await buffManager.captureOverlay(overlayGroup, readyToCapture);
+  await buffManager.captureOverlay(overlayGroup, readyToCapture, scale);
   readyToCapture.remove();
 }
 

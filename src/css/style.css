@@ -174,7 +174,7 @@ p.version {
   padding: 10px;
   border: 1px solid #333;
   background-color: var(--nis-col-back);
-  background-image: url('/nis/alt1-currentskin/background.png');
+  overflow: hidden;
 }
 
 .settings-section h3 {
@@ -584,4 +584,27 @@ h2 {
 
 .audio-button.queued:hover .audio-icon {
   color: #66BB6A;
+}
+
+/* Overlay settings form styling */
+.overlay-settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.overlay-settings-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.overlay-settings-input {
+  max-width: 50px;
+  padding: 6px;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  color: white;
+  text-align: right;
 }
