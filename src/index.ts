@@ -1,5 +1,5 @@
 import Alpine from 'alpinejs';
-import * as alt1 from 'alt1';
+import * as a1lib from 'alt1';
 import "./appconfig.json";
 import cooldownAlert from './audio/long-pop-alert.wav';
 import buffCoolDownAlert from './audio/pop-alert.mp3';
@@ -11,10 +11,12 @@ import { LocalStorageHelper } from './LocalStorageHelper';
 
 const storage = new LocalStorageHelper();
 const buffManager = new BuffManager(storage);
+const BUFFS_OVERLAY_GROUP = 'buffsOverlayGroup';
+const CENTER_OVERLAY_GROUP = 'centerOverlayGroup';
 
 // Initialize Alt1 app
 if (window.alt1) {
-  alt1.identifyApp("./appconfig.json");
+  a1lib.identifyApp("./appconfig.json");
   const settings = document.getElementById("settings") as HTMLElement;
   settings.className = "";
 } else {
@@ -30,6 +32,7 @@ Alpine.data('buffsData', () => ({
   buffs: [],
   draggedIndex: null as number | null,
   isDragging: false,
+  resetInprogress: false,
   alertedBuffs: new Set<string>(),
   lowCooldownAlertedBuffs: new Set<string>(),
   audio: new Audio(buffCoolDownAlert),
@@ -64,16 +67,17 @@ Alpine.data('buffsData', () => ({
     buffManager.toggleBuffAudioQueue(buffName);
   },
 
-  setOverlayPosition() {
-    buffManager.setOverlayPosition();
+  setOverlayPosition(group: string) {
+    buffManager.setOverlayPosition(group);
   },
 
   resetSettings() {
+    this.resetInprogress = true;
     storage.clear();
     this.buffs = [];
     this.alertedBuffs.clear();
-    alert('Settings have been reset. Please refresh the page.');
     location.reload();
+    this.resetInprogress = false;
   },
 
   onDragStart(event: DragEvent, index: number) {
@@ -114,15 +118,30 @@ Alpine.data('buffsData', () => ({
       buffManager.saveBuffOrder(this.buffs);
     }
   },
+  hasAlertedBuffs() {
+    return this.buffs.some(buff => this.isAlerted(buff.name));
+  },
+
+  isLowBuffCooldown(buff) {
+    const isLowBuffCooldown = buff.progress <= 30 && buff.buffCooldown > 0 && buff.buffCooldown <= 60;
+    return isLowBuffCooldown;
+  },
+
+  isLowCooldown(buff) {
+    const isLowCooldown = buff.cooldown <= 5;
+    return isLowCooldown;
+  },
 
   checkAndPlayAlerts() {
     this.buffs.forEach(buff => {
-      const isLowBuffCooldown = buff.progress <= 30 && buff.buffCooldown > 0 && buff.buffCooldown <= 60;
+      const isLowBuffCooldown = this.isLowBuffCooldown(buff);
 
-      if (isLowBuffCooldown && buff.isAudioQueued && buff.isPinned && !this.alertedBuffs.has(buff.name)) {
+      if (isLowBuffCooldown && buff.isPinned && !this.alertedBuffs.has(buff.name)) {
         // Play alert sound
-        this.audio.currentTime = 0;
-        this.audio.play().catch(err => console.log('Audio play failed:', err));
+        if (buff.isAudioQueued) {
+          this.audio.currentTime = 0;
+          this.audio.play().catch(err => console.log('Audio play failed:', err));
+        }
         // Mark this buff as alerted
         this.alertedBuffs.add(buff.name);
       } else if (!isLowBuffCooldown && this.alertedBuffs.has(buff.name)) {
@@ -130,11 +149,13 @@ Alpine.data('buffsData', () => ({
         this.alertedBuffs.delete(buff.name);
       }
 
-      const isLowCooldown = buff.cooldown > 0 && buff.cooldown <= 5;
-      if (isLowCooldown && buff.isAudioQueued && buff.isPinned && !this.lowCooldownAlertedBuffs.has(buff.name)) {
+      const isLowCooldown = this.isLowCooldown(buff);
+      if (isLowCooldown && buff.isPinned && !this.lowCooldownAlertedBuffs.has(buff.name)) {
         // Play long alert sound
-        this.longAudio.currentTime = 0;
-        this.longAudio.play().catch(err => console.log('Long audio play failed:', err));
+        if (buff.isAudioQueued) {
+          this.longAudio.currentTime = 0;
+          this.longAudio.play().catch(err => console.log('Long audio play failed:', err));
+        }
         // Mark this buff as alerted
         this.lowCooldownAlertedBuffs.add(buff.name);
       } else if (!isLowCooldown && this.lowCooldownAlertedBuffs.has(buff.name)) {
@@ -143,18 +164,17 @@ Alpine.data('buffsData', () => ({
     });
   },
 
+  isAlerted(buffName: string) {
+    const buff = this.buffs.find(b => b.name === buffName);
+    console.log(buffName, buff.cooldown);
+    if (!buff) return false;
+    return this.lowCooldownAlertedBuffs.has(buffName) && buff.cooldown > 0;
+  },
 
   async init() {
     const updateLoop = async () => {
-      if (this.timestamp === null) {
-        this.timestamp = Date.now();
-      } else {
-        const timeSinceLastUpdate = Date.now() - this.timestamp;
-        console.log(timeSinceLastUpdate);
-        this.timestamp = Date.now();
-      }
       // Skip update if user is dragging buffs
-      if (!this.isDragging) {
+      if (!this.isDragging && !this.resetInprogress) {
         const existingBuffs = await buffManager.getActiveBuffs();
         if (existingBuffs) {
           this.buffs = existingBuffs.map(b => ({ ...b }));
@@ -164,31 +184,40 @@ Alpine.data('buffsData', () => ({
         // Wait for Alpine to update the DOM
         await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-        const buffContainer = document.getElementById("buffs-output") as HTMLElement;
-        const innerHtml = stripAlpine(buffContainer.outerHTML);
-        const readyToCapture = document.createElement('div');
-        readyToCapture.innerHTML = innerHtml;
-        readyToCapture.style.position = 'absolute';
-        readyToCapture.style.top = '0';
-        readyToCapture.style.left = '-9999px';
-        document.body.appendChild(readyToCapture);
-        await Promise.all(
-          Array.from(readyToCapture.querySelectorAll('img')).map(img => {
-            if (img.complete) return Promise.resolve();
-            return new Promise(resolve => {
-              img.onload = resolve;
-              img.onerror = resolve;
-            });
-          })
-        );
-        await buffManager.captureOverlay(readyToCapture);
-        readyToCapture.remove();
+        await captureElementAsOverlay("buffs-output", BUFFS_OVERLAY_GROUP);
+        await captureElementAsOverlay("alerted-buffs", CENTER_OVERLAY_GROUP);
       }
       setTimeout(updateLoop, 150);
     };
     updateLoop();
   }
 }));
+
+async function captureElementAsOverlay(elementId: string, overlayGroup: string) {
+  const container = document.getElementById(elementId) as HTMLElement;
+  if (!container) return;
+
+  const innerHtml = stripAlpine(container.outerHTML);
+  const readyToCapture = document.createElement('div');
+  readyToCapture.innerHTML = innerHtml;
+  readyToCapture.style.position = 'absolute';
+  readyToCapture.style.top = '0';
+  readyToCapture.style.left = '-9999px';
+  document.body.appendChild(readyToCapture);
+
+  await Promise.all(
+    Array.from(readyToCapture.querySelectorAll('img')).map(img => {
+      if (img.complete) return Promise.resolve();
+      return new Promise(resolve => {
+        img.onload = resolve;
+        img.onerror = resolve;
+      });
+    })
+  );
+
+  await buffManager.captureOverlay(overlayGroup, readyToCapture);
+  readyToCapture.remove();
+}
 
 function stripAlpine(html: string): string {
   return html

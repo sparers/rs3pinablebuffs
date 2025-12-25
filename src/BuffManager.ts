@@ -11,8 +11,7 @@ export class BuffManager {
   private readonly storage: LocalStorageHelper;
   private matchedBuffsCache = new Map<string, BuffCacheEntry>();
 
-  private readonly OVERLAY_POSITION_KEY = 'overlayPosition';
-  private readonly OVERLAY_GROUP = 'overlayGroup';
+
   private readonly TRACKED_BUFFS_KEY = 'trackedBuffs';
 
   constructor(storage: LocalStorageHelper) {
@@ -262,12 +261,12 @@ export class BuffManager {
     return false;
   };
 
-  public setOverlayPosition = (): void => {
+  public setOverlayPosition = (overlayPositionKey: string): void => {
     alt1.setTooltip('Press Alt+1 to save position');
     a1lib.once('alt1pressed', () => {
       try {
         const mousePos = a1lib.getMousePosition();
-        this.storage.save<OverlayPosition>(this.OVERLAY_POSITION_KEY, {
+        this.storage.save<OverlayPosition>(overlayPositionKey, {
           x: Math.floor(mousePos.x),
           y: Math.floor(mousePos.y),
         });
@@ -278,15 +277,18 @@ export class BuffManager {
     });
   };
 
-  public captureOverlay = async (element: HTMLElement): Promise<void> => {
+  public captureOverlay = async (group: string, element: HTMLElement): Promise<void> => {
     try {
       const filter = (node: Element): boolean => {
         return !node.classList?.contains('exclude-me');
       };
 
+      const style = getComputedStyle(element);
+
       const dataUrl = await htmlToImage.toCanvas(element, {
-        width: 250,
-        height: 1000,
+        width: parseInt(style.width) || 1,
+        height: parseInt(style.height) || 1,
+        backgroundColor: 'transparent',
         quality: 1,
         pixelRatio: 1.5,
         skipAutoScale: false,
@@ -300,14 +302,14 @@ export class BuffManager {
         }
       });
 
-      const overlayPosition = this.storage.get<OverlayPosition>(this.OVERLAY_POSITION_KEY);
+      const overlayPosition = this.storage.get<OverlayPosition>(group);
       if (!overlayPosition) return;
 
       const base64ImageString = dataUrl.getContext('2d')!.getImageData(0, 0, dataUrl.width, dataUrl.height);
 
-      alt1.overLaySetGroup(this.OVERLAY_GROUP);
-      alt1.overLayFreezeGroup(this.OVERLAY_GROUP);
-      alt1.overLayClearGroup(this.OVERLAY_GROUP);
+      alt1.overLaySetGroup(group);
+      alt1.overLayFreezeGroup(group);
+      alt1.overLayClearGroup(group);
       alt1.overLayImage(
         overlayPosition.x,
         overlayPosition.y,
@@ -315,7 +317,7 @@ export class BuffManager {
         base64ImageString.width,
         150
       );
-      alt1.overLayRefreshGroup(this.OVERLAY_GROUP);
+      alt1.overLayRefreshGroup(group);
     } catch (e) {
       console.error(e);
     }

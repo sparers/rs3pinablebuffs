@@ -33,7 +33,7 @@
       </div>
 
       <div class="tab-content" x-show="activeTab === 'buffs'">
-        <div id="buffs-output">
+        <div>
           <div x-show="buffs.length === 0" class="empty-placeholder">
             <svg viewBox="0 0 24 24" class="placeholder-icon" fill="currentColor">
               <path
@@ -43,7 +43,7 @@
             <h3>No Buffs Tracked</h3>
             <p>Active buffs will appear here once detected in-game.</p>
           </div>
-          <div class="settings-section" x-show="buffs.length > 0">
+          <div class="settings-section" x-show="buffs.length > 0" id="buffs-output">
             <template x-for="(buff, index) in buffs" :key="buff.name">
               <div
                 class="buff-row"
@@ -61,7 +61,7 @@
                 <div class="tracks-container">
                   <div
                     class="buff-bar-track cooldown"
-                    :class="{'disabled': buff.cooldown === 0, 'flashing': buff.cooldown <= 5 }"
+                    :class="{'disabled': buff.cooldown === 0, 'flashing': isLowCooldown(buff) }"
                     x-show="buff.hasCooldown"
                   >
                     <div class="bar-fill cooldown-fill" :style="{ width: buff.cooldownProgress + '%' }"></div>
@@ -71,7 +71,7 @@
                   </div>
                   <div
                     class="buff-bar-track"
-                    :class="{ 'disabled': buff.buffCooldown === 0, 'flashing': buff.progress <= 30 && buff.buffCooldown > 0 && buff.buffCooldown <= 60 }"
+                    :class="{ 'disabled': buff.buffCooldown === 0, 'flashing': isLowBuffCooldown(buff) }"
                   >
                     <div class="bar-fill adren-fill" :style="{ width: buff.progress + '%' }"></div>
                     <span class="buff-label">
@@ -107,15 +107,28 @@
               </div>
             </template>
           </div>
+          <div class="settings-section" x-show="hasAlertedBuffs()" id="alerted-buffs">
+              <div class="alerted-buffs-row">
+                <template x-for="(buff, index) in buffs" :key="buff.name">
+                    <div class="stat-icon buff-icon large" x-show="isAlerted(buff.name)">
+                      <img class="buff-icon-img" :src="buff.imagePath" :alt="buff.name" />
+                      <span class="timer" x-text="parseInt(buff.cooldown)"></span>
+                    </div>
+                </template>
+              </div>
+          </div>
         </div>
       </div>
 
       <div class="tab-content" x-show="activeTab === 'settings'">
         <div class="settings-section">
+          <h2>Overlays</h2>
           <p>To set the overlay click tyhe button above go to your desired location and press alt + 1.</p>
+          <p>To set the alerts overlay click tyhe button above go to your desired location and press alt + 1.</p>
           <p>Only pinned buffs will display in the overlay.</p>
           <div class="header-buttons">
-            <button x-on:click="setOverlayPosition()" class="nisbutton">Set overlay position</button>
+            <button x-on:click="setOverlayPosition('buffsOverlayGroup')" class="nisbutton">Set buffs</button>
+            <button x-on:click="setOverlayPosition('centerOverlayGroup')" class="nisbutton">Set alerts</button>
           </div>
         </div>
 

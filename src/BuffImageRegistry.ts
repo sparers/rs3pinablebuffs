@@ -423,7 +423,7 @@ export class BuffImageRegistry {
         hasCooldown: false
       },
       {
-        name: "Familiar", image: this.Buffs.familiar, threshold: 160, path: './imgs/icons/familiar.png', debug: true,
+        name: "Familiar", image: this.Buffs.familiar, threshold: 160, path: './imgs/icons/familiar.png', debug: false,
         cooldown: 0,
         hasCooldown: false
       },
