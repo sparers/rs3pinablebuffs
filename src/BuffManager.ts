@@ -284,19 +284,13 @@ export class BuffManager {
 
   public captureOverlay = async (group: string, element: HTMLElement, scale: number): Promise<void> => {
     try {
-      const filter = (node: Element): boolean => {
-        return !node.classList?.contains('exclude-me');
-      };
-
       const style = getComputedStyle(element);
-
       const dataUrl = await htmlToImage.toCanvas(element, {
         width: parseInt(style.width) || 1,
         height: parseInt(style.height) || 1,
         quality: 1,
         pixelRatio: scale,
         imagePlaceholder: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect width="32" height="32" fill="%23ddd"/><text x="16" y="16" text-anchor="middle" dy=".3em" font-size="10" fill="%23999">?</text></svg>',
-        filter: filter,
         style: {
           transform: 'none',
           left: '0',
