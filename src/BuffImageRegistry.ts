@@ -134,8 +134,8 @@ export class BuffImageRegistry {
       {
         name: "FSOA Spec", image: this.Buffs.fsoaWeaponSpec, threshold: 80, path: './imgs/icons/fsoa_spec.png',
         debug: false,
-        abilityCooldown: 0,
-        hasAbilityCooldown: false
+        abilityCooldown: 60,
+        hasAbilityCooldown: true
       },
       {
         name: "Time Rift", image: this.Buffs.timeRift, threshold: 450, path: './imgs/icons/time_rift.png',
