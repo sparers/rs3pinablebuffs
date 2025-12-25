@@ -61,23 +61,23 @@
                 <div class="tracks-container">
                   <div
                     class="buff-bar-track cooldown"
-                    :class="{'disabled': buff.cooldown === 0, 'flashing': isLowCooldown(buff) }"
-                    x-show="buff.hasCooldown"
+                    :class="{'disabled': buff.abilityCooldown === 0, 'flashing': isLowAbilityCooldown(buff) }"
+                    x-show="buff.hasAbilityCooldown"
                   >
-                    <div class="bar-fill cooldown-fill" :style="{ width: buff.cooldownProgress + '%' }"></div>
+                    <div class="bar-fill cooldown-fill" :style="{ width: buff.abilityCooldownProgress + '%' }"></div>
                     <span class="buff-label">
                       <span class="buff-name"></span>
-                      <span class="buff-timer" x-text="formatTime(buff.cooldown)"></span>
+                      <span class="buff-timer" x-text="formatTime(buff.abilityCooldown)"></span>
                     </span>
                   </div>
                   <div
                     class="buff-bar-track"
-                    :class="{ 'disabled': buff.buffCooldown === 0, 'flashing': isLowBuffCooldown(buff) }"
+                    :class="{ 'disabled': buff.buffDuration === 0, 'flashing': isLowBuffDuration(buff) }"
                   >
-                    <div class="bar-fill adren-fill" :style="{ width: buff.progress + '%' }"></div>
+                    <div class="bar-fill adren-fill" :style="{ width: buff.buffProgress + '%' }"></div>
                     <span class="buff-label">
                       <span class="buff-name" x-text="buff.name"></span>
-                      <span class="buff-timer" x-text="formatTime(buff.buffCooldown)"></span>
+                      <span class="buff-timer" x-text="formatTime(buff.buffDuration)"></span>
                     </span>
                   </div>
                 </div>
@@ -115,7 +115,7 @@
                 <template x-for="(buff, index) in buffs" :key="buff.name">
                     <div class="stat-icon buff-icon large" x-show="isAlerted(buff.name)">
                       <img class="buff-icon-img" :src="buff.imagePath" :alt="buff.name" />
-                      <span class="timer" x-text="parseInt(buff.cooldown)"></span>
+                      <span class="timer" x-text="parseInt(buff.abilityCooldown)"></span>
                     </div>
                 </template>
               </div>
@@ -153,12 +153,12 @@
                 />
               </div>
               <div class="overlay-settings-field">
-                <label for="buff-threshold-input">Buff Alert Threshold (s):</label>
+                <label for="buff-threshold-input">Buff Duration Alert Threshold (s):</label>
                 <input 
                   id="buff-threshold-input" 
                   type="number" 
                   class="overlay-settings-input"
-                  x-model.number="overlaySettingsForm.buffCooldownThreshold" 
+                  x-model.number="overlaySettingsForm.buffDurationAlertThreshold" 
                   @change="saveOverlaySettings()" 
                   min="1" 
                   max="60" 
@@ -166,12 +166,12 @@
                 />
               </div>
               <div class="overlay-settings-field">
-                <label for="ability-threshold-input">Cooldown Alert Threshold (s):</label>
+                <label for="ability-threshold-input">Ability Cooldown Alert Threshold (s):</label>
                 <input 
                   id="ability-threshold-input" 
                   type="number" 
                   class="overlay-settings-input"
-                  x-model.number="overlaySettingsForm.abilityCooldownThreshold" 
+                  x-model.number="overlaySettingsForm.abilityCooldownAlertThreshold" 
                   @change="saveOverlaySettings()" 
                   min="1" 
                   max="60" 
