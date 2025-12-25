@@ -144,40 +144,80 @@
           <p>Select which target debuffs to track.</p>
           <div class="overlay-settings-form">
             <div class="overlay-settings-field">
-              <label for="vulnerability-checkbox">Vulnerability:</label>
-              <input 
-                id="vulnerability-checkbox" 
-                type="checkbox" 
-                x-model="overlaySettingsForm.trackedTargetDebuffs.vulnerability" 
-                @change="saveOverlaySettings()"
-              />
+              <div class="overlay-settings-field-group">
+                <label for="vulnerability-checkbox">Vulnerability:</label>
+              </div>
+              <button 
+                type="button"
+                id="vulnerability-checkbox"
+                class="settings-checkbox"
+                :class="{ 'active': overlaySettingsForm.trackedTargetDebuffs.vulnerability }"
+                @click="overlaySettingsForm.trackedTargetDebuffs.vulnerability = !overlaySettingsForm.trackedTargetDebuffs.vulnerability; saveOverlaySettings()"
+              >
+                <svg class="settings-checkbox-icon" viewBox="0 0 24 24" x-show="!overlaySettingsForm.trackedTargetDebuffs.vulnerability">
+                  <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19Z" />
+                </svg>
+                <svg class="settings-checkbox-icon" viewBox="0 0 24 24" x-show="overlaySettingsForm.trackedTargetDebuffs.vulnerability">
+                  <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19M17.9,8.35L16.85,7.3L10.3,13.85L7.15,10.7L6.1,11.75L10.3,16L17.9,8.35Z" />
+                </svg>
+              </button>
             </div>
             <div class="overlay-settings-field">
-              <label for="deathmark-checkbox">Death Mark:</label>
-              <input 
-                id="deathmark-checkbox" 
-                type="checkbox" 
-                x-model="overlaySettingsForm.trackedTargetDebuffs.deathMark" 
-                @change="saveOverlaySettings()"
-              />
+              <div class="overlay-settings-field-group">
+                <label for="deathmark-checkbox">Death Mark:</label>
+              </div>
+              <button 
+                type="button"
+                id="deathmark-checkbox"
+                class="settings-checkbox"
+                :class="{ 'active': overlaySettingsForm.trackedTargetDebuffs.deathMark }"
+                @click="overlaySettingsForm.trackedTargetDebuffs.deathMark = !overlaySettingsForm.trackedTargetDebuffs.deathMark; saveOverlaySettings()"
+              >
+                <svg class="settings-checkbox-icon" viewBox="0 0 24 24" x-show="!overlaySettingsForm.trackedTargetDebuffs.deathMark">
+                  <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19Z" />
+                </svg>
+                <svg class="settings-checkbox-icon" viewBox="0 0 24 24" x-show="overlaySettingsForm.trackedTargetDebuffs.deathMark">
+                  <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19M17.9,8.35L16.85,7.3L10.3,13.85L7.15,10.7L6.1,11.75L10.3,16L17.9,8.35Z" />
+                </svg>
+              </button>
             </div>
             <div class="overlay-settings-field">
-              <label for="bloat-checkbox">Bloat:</label>
-              <input 
-                id="bloat-checkbox" 
-                type="checkbox" 
-                x-model="overlaySettingsForm.trackedTargetDebuffs.bloat" 
-                @change="saveOverlaySettings()"
-              />
+              <div class="overlay-settings-field-group">
+                <label for="bloat-checkbox">Bloat:</label>
+              </div>
+              <button 
+                type="button"
+                id="bloat-checkbox"
+                class="settings-checkbox"
+                :class="{ 'active': overlaySettingsForm.trackedTargetDebuffs.bloat }"
+                @click="overlaySettingsForm.trackedTargetDebuffs.bloat = !overlaySettingsForm.trackedTargetDebuffs.bloat; saveOverlaySettings()"
+              >
+                <svg class="settings-checkbox-icon" viewBox="0 0 24 24" x-show="!overlaySettingsForm.trackedTargetDebuffs.bloat">
+                  <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19Z" />
+                </svg>
+                <svg class="settings-checkbox-icon" viewBox="0 0 24 24" x-show="overlaySettingsForm.trackedTargetDebuffs.bloat">
+                  <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19M17.9,8.35L16.85,7.3L10.3,13.85L7.15,10.7L6.1,11.75L10.3,16L17.9,8.35Z" />
+                </svg>
+              </button>
             </div>
             <div class="overlay-settings-field">
-              <label for="target-audio-alert-checkbox">Enable Audio Alert for target debuffs:</label>
-              <input 
-                id="target-audio-alert-checkbox" 
-                type="checkbox" 
-                x-model="overlaySettingsForm.targetDebuffAudioAlert" 
-                @change="saveOverlaySettings()"
-              />
+              <div class="overlay-settings-field-group">
+                <label for="target-audio-alert-checkbox">Enable audio alert for target debuffs:</label>
+              </div>
+              <button 
+                type="button"
+                id="target-audio-alert-checkbox"
+                class="settings-checkbox"
+                :class="{ 'active': overlaySettingsForm.targetDebuffAudioAlert }"
+                @click="overlaySettingsForm.targetDebuffAudioAlert = !overlaySettingsForm.targetDebuffAudioAlert; saveOverlaySettings()"
+              >
+                <svg class="settings-checkbox-icon" viewBox="0 0 24 24" x-show="!overlaySettingsForm.targetDebuffAudioAlert">
+                  <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19Z" />
+                </svg>
+                <svg class="settings-checkbox-icon" viewBox="0 0 24 24" x-show="overlaySettingsForm.targetDebuffAudioAlert">
+                  <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V5H19V19M17.9,8.35L16.85,7.3L10.3,13.85L7.15,10.7L6.1,11.75L10.3,16L17.9,8.35Z" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>

@@ -613,3 +613,43 @@ h2 {
   color: white;
   text-align: right;
 }
+
+.setting-icon {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #444;
+  object-fit: contain;
+  background-color: #222;
+}
+
+.overlay-settings-field-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-checkbox {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #666;
+}
+
+.settings-checkbox:hover {
+  color: #999;
+}
+
+.settings-checkbox.active {
+  color: #f39c12;
+}
+
+.settings-checkbox-icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
