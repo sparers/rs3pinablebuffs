@@ -45,7 +45,7 @@ Alpine.data('buffsData', () => ({
   lastUpdate: Date.now(),
   overlaySettings: {
     scale: 1,
-    buffDurationAlertThreshold: 30,
+    buffDurationAlertThreshold: 10,
     abilityCooldownAlertThreshold: 5,
     trackedTargetDebuffs: {
       vulnerability: false,
@@ -56,7 +56,7 @@ Alpine.data('buffsData', () => ({
   },
   overlaySettingsForm: {
     scale: 1,
-    buffDurationAlertThreshold: 30,
+    buffDurationAlertThreshold: 10,
     abilityCooldownAlertThreshold: 5,
     trackedTargetDebuffs: {
       vulnerability: false,
@@ -169,7 +169,7 @@ Alpine.data('buffsData', () => ({
     if (saved) {
       this.overlaySettings = {
         scale: saved.scale ?? 1,
-        buffDurationAlertThreshold: saved.buffDurationAlertThreshold ?? 30,
+        buffDurationAlertThreshold: saved.buffDurationAlertThreshold ?? 10,
         abilityCooldownAlertThreshold: saved.abilityCooldownAlertThreshold ?? 5,
         trackedTargetDebuffs: saved.trackedTargetDebuffs ?? {
           vulnerability: false,
@@ -181,7 +181,7 @@ Alpine.data('buffsData', () => ({
     } else {
       this.overlaySettings = {
         scale: 1,
-        buffDurationAlertThreshold: 30,
+        buffDurationAlertThreshold: 10,
         abilityCooldownAlertThreshold: 5,
         trackedTargetDebuffs: {
           vulnerability: false,
