@@ -49,13 +49,14 @@ export class BuffManager {
             if (buffData.image == null) continue;
             const matchResult = activeBuff.countMatch(buffData.image, buffData.useAggressiveSearh || false);
             if (buffData.debug) {
-              console.debug(`debug: ${buffData.name}:${buffData.threshold} -> passed: ${matchResult.passed}`);
+              //console.debug(`debug: before check ${buffData.name}:${buffData.threshold} -> passed: ${matchResult.passed}`);
             }
 
             if (matchResult.passed >= buffData.threshold) {
               const time = activeBuff.readTime();
               const buffText = activeBuff.readArg('arg').arg || '';
               if (buffData.debug) {
+                console.debug(`match: ${buffData.name}:${buffData.threshold} -> passed: ${matchResult.passed}`);
                 console.debug(`debug: ${buffData.name} -> arg: ${buffText}`);
               }
 
@@ -199,7 +200,7 @@ export class BuffManager {
 
     const targetLocation = {
       x: targetPos.x - 120,
-      y: targetPos.y + 20,
+      y: targetPos.y + 25,
       w: 150,
       h: 60,
     };
@@ -211,12 +212,26 @@ export class BuffManager {
       targetLocation.h
     );
 
+    // alt1.overLaySetGroup('targetArea');
+    // alt1.overLayRect(
+    //   a1lib.mixColor(120, 255, 120),
+    //   capturedArea.x,
+    //   capturedArea.y,
+    //   capturedArea.width,
+    //   capturedArea.height,
+    //   3000,
+    //   1
+    // );
+    // alt1.overLayClearGroup('targetArea');
+
+
     const targetDebuffsData = BuffImageRegistry.buffData.filter(buff =>
       buff.isTarget &&
       trackedTargetDebuffs[buff.name.charAt(0).toLowerCase() + buff.name.slice(1).replace(/\s+/g, '')]
     );
 
     return targetDebuffsData.map(debuff => {
+      console.log(debuff.name, debuff.path);
       const isPresent = debuff.image ? capturedArea.findSubimage(debuff.image).length > 0 : false;
       return {
         ...debuff,

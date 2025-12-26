@@ -101,6 +101,7 @@ export class BuffImageRegistry {
       deathMark: require('./imgs/buffs/Death_Mark.data.png'),
       vulnerability: require('./imgs/buffs/Vulnerability_bordered.data.png'),
       bloat: require('./imgs/buffs/Bloated.data.png'),
+      smokeCloud: require('./imgs/buffs/smoke_cloud.data.png'),
     }).promise;
 
     this._buffData = [
@@ -176,12 +177,11 @@ export class BuffImageRegistry {
         isStack: true
       },
       {
-        name: "Residual Soul", image: this.Buffs.residualSoul, threshold: 60, path: './imgs/icons/residual_soul.png',
+        name: "Residual Soul", image: this.Buffs.residualSoul, threshold: 400, path: './imgs/icons/residual_soul.png',
         abilityCooldown: 0,
         hasAbilityCooldown: false,
         isTarget: false,
-        isStack: true,
-        debug: true
+        isStack: true
       },
       {
         name: "Aura", image: this.Buffs.aura, threshold: 400, path: './imgs/icons/equilibrium_aura.png',
@@ -407,7 +407,7 @@ export class BuffImageRegistry {
         abilityCooldown: 0,
         hasAbilityCooldown: false,
         isTarget: false,
-        isStack: false
+        isStack: true
       },
       {
         name: "Blood Tithe", image: this.Buffs.bloodTithe, threshold: 60, path: './imgs/icons/blood_tithe.png',
@@ -491,14 +491,14 @@ export class BuffImageRegistry {
       {
         name: "Icy chill",
         image: this.Buffs.icyChill,
-        threshold: 29,
+        threshold: 400,
         path: './imgs/icons/icy_chill.png',
         hasAbilityCooldown: false,
         abilityCooldown: 0,
         isStack: true,
         isTarget: false,
-        //debug: true,
-        useAggressiveSearh: true
+        debug: true,
+        useAggressiveSearh: false
       },
       {
         name: "Cannon Decay", image: this.Debuffs.cannon, threshold: 120, path: './imgs/icons/cannon.png',
@@ -617,6 +617,14 @@ export class BuffImageRegistry {
       },
       {
         name: "Bloat", image: this.Target.bloat, threshold: 0, path: './imgs/icons/bloat.png',
+        debug: false,
+        abilityCooldown: 0,
+        hasAbilityCooldown: false,
+        isTarget: true,
+        isStack: false
+      },
+      {
+        name: "Smoke Cloud", image: this.Target.smokeCloud, threshold: 0, path: './imgs/icons/smoke_cloud.png',
         debug: false,
         abilityCooldown: 0,
         hasAbilityCooldown: false,

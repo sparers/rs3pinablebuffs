@@ -51,7 +51,8 @@ Alpine.data('buffsData', () => ({
     trackedTargetDebuffs: {
       vulnerability: false,
       deathMark: false,
-      bloat: false
+      bloat: false,
+      smokeCloud: false
     },
     targetDebuffAudioAlert: true
   },
@@ -62,7 +63,8 @@ Alpine.data('buffsData', () => ({
     trackedTargetDebuffs: {
       vulnerability: false,
       deathMark: false,
-      bloat: false
+      bloat: false,
+      smokeCloud: false
     },
     targetDebuffAudioAlert: true
   },
@@ -175,7 +177,8 @@ Alpine.data('buffsData', () => ({
         trackedTargetDebuffs: saved.trackedTargetDebuffs ?? {
           vulnerability: false,
           deathMark: false,
-          bloat: false
+          bloat: false,
+          smokeCloud: false
         },
         targetDebuffAudioAlert: saved.targetDebuffAudioAlert ?? true
       };
@@ -187,7 +190,8 @@ Alpine.data('buffsData', () => ({
         trackedTargetDebuffs: {
           vulnerability: false,
           deathMark: false,
-          bloat: false
+          bloat: false,
+          smokeCloud: false
         },
         targetDebuffAudioAlert: true
       };
@@ -245,7 +249,7 @@ Alpine.data('buffsData', () => ({
     }
   },
   hasAlertedBuffs() {
-    return this.buffs.some(buff => this.isAlerted(buff.name)) || this.targetDebuffs.length > 0 || this.stacks.length > 0;
+    return this.buffs.some(buff => this.isAlerted(buff.name)) || this.targetDebuffs.length > 0 || this.stacks.filter(stack => stack.cooldown > 0).length > 0;
   },
 
   isLowBuffDuration(buff) {
