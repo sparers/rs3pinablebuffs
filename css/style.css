@@ -449,7 +449,8 @@ h2 {
 }
 
 .disabled {
-  /* filter: grayscale(100%); */
+  filter: grayscale(100%);
+  opacity: .5;
 }
 
 .buff-row.dragging {

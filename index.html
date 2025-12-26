@@ -26,7 +26,9 @@
         </button>
         <button class="tab-button" :class="{ 'active': activeTab === 'help' }" @click="activeTab = 'help'">
           <svg viewBox="0 0 24 24" class="tab-icon" fill="currentColor">
-            <path d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z" />
+            <path
+              d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z"
+            />
           </svg>
           Help
         </button>
@@ -49,13 +51,13 @@
         </div>
         <div>
           <div class="overlay-warning" x-show="buffs.length === 0">
-          <svg viewBox="0 0 24 24" class="warning-icon" fill="currentColor">
-            <path d="M12,2L1,21H23L12,2M12,6L19.53,19H4.47L12,6M11,10V14H13V10H11M11,16V18H13V16H11Z"></path>
-          </svg>
-          <div class="warning-text">
-            <p>Active buffs will appear here once detected in-game.</p>
+            <svg viewBox="0 0 24 24" class="warning-icon" fill="currentColor">
+              <path d="M12,2L1,21H23L12,2M12,6L19.53,19H4.47L12,6M11,10V14H13V10H11M11,16V18H13V16H11Z"></path>
+            </svg>
+            <div class="warning-text">
+              <p>Active buffs will appear here once detected in-game.</p>
+            </div>
           </div>
-        </div>
 
           <div class="settings-section" x-show="buffs.length > 0" id="buffs-output">
             <template x-for="(buff, index) in buffs" :key="buff.name">
@@ -75,8 +77,8 @@
                 <div class="tracks-container">
                   <div
                     class="buff-bar-track cooldown"
-                    :class="{'disabled': buff.abilityCooldown === 0, 'flashing': isLowAbilityCooldown(buff) }"
-                    x-show="buff.hasAbilityCooldown"
+                    :class="{'flashing': isLowAbilityCooldown(buff) }"
+                    x-show="buff.hasAbilityCooldown && buff.abilityCooldown > 0"
                   >
                     <div class="bar-fill cooldown-fill" :style="{ width: buff.abilityCooldownProgress + '%' }"></div>
                     <span class="buff-label">
@@ -84,7 +86,7 @@
                       <span class="buff-timer" x-text="formatTime(buff.abilityCooldown)"></span>
                     </span>
                   </div>
-                  <div class="buff-bar-track" :class="{ 'disabled': buff.buffDuration === 0, 'flashing': isLowBuffDuration(buff) }">
+                  <div class="buff-bar-track" :class="{ 'flashing': isLowBuffDuration(buff) }">
                     <div class="bar-fill adren-fill" :style="{ width: buff.buffProgress + '%' }"></div>
                     <span class="buff-label">
                       <span class="buff-name" x-text="buff.name"></span>
