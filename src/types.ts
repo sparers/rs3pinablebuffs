@@ -5,9 +5,12 @@ export interface BuffData {
     image: any;
     threshold: number;
     path: string;
-    debug?: boolean;
     abilityCooldown: number;
     hasAbilityCooldown: boolean;
+    isStack: boolean;
+    isTarget: boolean;
+    useAggressiveSearh?: boolean;
+    debug?: boolean;
 }
 
 export interface BuffCacheEntry {
@@ -23,6 +26,8 @@ export interface BuffCacheEntry {
     abilityCooldownProgress: number;
     abilityCooldownMax: number;
     hasAbilityCooldown: boolean;
+    isStack: boolean;
+    text: string;
     order: number;
 }
 
@@ -35,7 +40,9 @@ export interface PersistedBuff {
     abilityCooldown?: number;
     abilityCooldownProgress?: number;
     abilityCooldownMax?: number;
-    hasAbilityCooldown: boolean
+    hasAbilityCooldown: boolean;
+    isStack: boolean;
+    text: string;
 }
 
 export interface OverlayPosition {
@@ -52,3 +59,5 @@ export interface OverlaySettings {
 }
 
 export type ImageCollection = Record<string, ImgRef>;
+
+

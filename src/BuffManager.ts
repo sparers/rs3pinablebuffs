@@ -47,35 +47,45 @@ export class BuffManager {
         for (const activeBuff of buffsAndDebuffs) {
           for (const buffData of registeredBuffs) {
             if (buffData.image == null) continue;
-            const matchResult = activeBuff.countMatch(buffData.image, false);
+            const matchResult = activeBuff.countMatch(buffData.image, buffData.useAggressiveSearh || false);
             if (buffData.debug) {
-              console.log(`debug: ${buffData.name}:${buffData.threshold} -> passed: ${matchResult.passed}`);
+              console.debug(`debug: ${buffData.name}:${buffData.threshold} -> passed: ${matchResult.passed}`);
             }
 
             if (matchResult.passed >= buffData.threshold) {
-              const buffDuration = activeBuff.readArg('timearg')?.time || 0;
+              const time = activeBuff.readTime();
+              const buffText = activeBuff.readArg('arg').arg || '';
+              if (buffData.debug) {
+                console.debug(`debug: ${buffData.name} -> arg: ${buffText}`);
+              }
+
               currentActiveBuffs.add(buffData.name);
 
               const existingBuff = this.matchedBuffsCache.get(buffData.name);
 
               // Determine duration and progress based on buff duration
               let newBuffDuration: number;
+              let newText: string;
               let newBuffProgress: number;
               let newBuffDurationMax: number;
 
-              if (buffDuration <= 59) {
+              if (buffText.length <= 59) {
                 // For short buffs, always use game's duration
-                newBuffDuration = buffDuration;
-                newBuffDurationMax = existingBuff?.buffDurationMax || buffDuration;
-                newBuffProgress = newBuffDurationMax > 0 ? (buffDuration / newBuffDurationMax) * 100 : 0;
-              } else if (!existingBuff || buffDuration > existingBuff.buffDuration) {
+                newBuffDuration = time;
+                newText = buffText;
+                newBuffDurationMax = existingBuff?.buffDurationMax || time;
+                newBuffProgress = newBuffDurationMax > 0 ? (time / newBuffDurationMax) * 100 : 0;
+              } else if (!existingBuff || time > existingBuff.buffDuration) {
                 // For long buffs, only reset if new or duration increased
-                newBuffDuration = buffDuration;
-                newBuffDurationMax = buffDuration;
+                newBuffDuration = time;
+                newText = buffText;
+                newBuffDurationMax = time;
                 newBuffProgress = 100;
+
               } else {
                 // Keep existing values and let updateCooldowns() tick them down
                 newBuffDuration = existingBuff.buffDuration;
+                newText = existingBuff.text;
                 newBuffDurationMax = existingBuff.buffDurationMax;
                 newBuffProgress = existingBuff.buffProgress;
               }
@@ -127,7 +137,9 @@ export class BuffManager {
                 abilityCooldown: abilityCooldown,
                 abilityCooldownProgress: abilityCooldownProgress,
                 abilityCooldownMax: abilityCooldownMax,
-                hasAbilityCooldown: buffData.hasAbilityCooldown
+                hasAbilityCooldown: buffData.hasAbilityCooldown,
+                isStack: buffData.isStack,
+                text: newText
               });
               break;
             }
@@ -254,7 +266,9 @@ export class BuffManager {
       abilityCooldown: buff.abilityCooldown,
       abilityCooldownProgress: buff.abilityCooldownProgress,
       abilityCooldownMax: buff.abilityCooldownMax,
-      hasAbilityCooldown: buff.hasAbilityCooldown
+      hasAbilityCooldown: buff.hasAbilityCooldown,
+      isStack: buff.isStack,
+      text: buff.text
     }));
     this.storage.save(this.TRACKED_BUFFS_KEY, buffsArray);
   };
@@ -277,7 +291,9 @@ export class BuffManager {
           abilityCooldownProgress: buff.abilityCooldownProgress || 0,
           abilityCooldownMax: buff.abilityCooldownMax || 0,
           order: buff.order ?? 999,
-          hasAbilityCooldown: buff.hasAbilityCooldown
+          hasAbilityCooldown: buff.hasAbilityCooldown,
+          isStack: buff.isStack,
+          text: buff.text
         });
       });
     }

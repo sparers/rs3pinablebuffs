@@ -178,6 +178,10 @@ p.version {
   overflow: hidden;
 }
 
+.settings-section.cooldowns {
+  padding-top: 2px;
+}
+
 .settings-section h3 {
   margin: 0 0 15px 0;
   color: #fff;
@@ -286,6 +290,7 @@ p.version {
   z-index: 2;
   overflow: hidden;
   background-color: #222;
+  position: relative;
 }
 
 .stat-icon.buff-icon {
@@ -385,6 +390,23 @@ p.version {
   align-items: center;
   gap: 8px;
   flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.alerted-buffs-row .buffs-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.alerted-buffs-row .category {
+  display: flex;
+  flex-direction: column;
+}
+
+.alerted-buffs-row .category .title {
+  color: #aa8800;
+  margin-bottom: 2px;
+  font-weight: bold;
 }
 
 .buff-row:last-child {
@@ -447,6 +469,16 @@ h2 {
   color: white;
   text-shadow: 2px 2px 10px black;
   font-weight: bold;
+}
+
+.stat-icon .stacks {
+  position: absolute;
+  font-size: 18px;
+  color: white;
+  text-shadow: 2px 2px 10px black;
+  font-weight: bold;
+  bottom: -2px;
+  right: 2px;
 }
 
 .stat-icon.large {

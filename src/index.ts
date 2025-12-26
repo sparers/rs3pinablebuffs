@@ -32,6 +32,7 @@ if (window.alt1) {
 Alpine.data('buffsData', () => ({
   buffs: [],
   targetDebuffs: [],
+  stacks: [],
   draggedIndex: null as number | null,
   isDragging: false,
   resetInprogress: false,
@@ -244,7 +245,7 @@ Alpine.data('buffsData', () => ({
     }
   },
   hasAlertedBuffs() {
-    return this.buffs.some(buff => this.isAlerted(buff.name)) || this.targetDebuffs.length > 0;
+    return this.buffs.some(buff => this.isAlerted(buff.name)) || this.targetDebuffs.length > 0 || this.stacks.length > 0;
   },
 
   isLowBuffDuration(buff) {
@@ -263,7 +264,7 @@ Alpine.data('buffsData', () => ({
     this.buffs.forEach(buff => {
       const isLowBuffDuration = this.isLowBuffDuration(buff);
 
-      if (isLowBuffDuration && buff.isPinned && !this.alertedBuffs.has(buff.name) && !buff.hasAbilityCooldown) {
+      if (isLowBuffDuration && buff.isPinned && !this.alertedBuffs.has(buff.name) && !buff.hasAbilityCooldown && !buff.isStack) {
         // Play alert sound
         if (buff.isAudioQueued) {
           this.clockTickingAudio.currentTime = 0;
@@ -313,6 +314,14 @@ Alpine.data('buffsData', () => ({
     return this.abilityCooldownAlertedBuffs.has(buffName) && buff.abilityCooldown > 0;
   },
 
+  hasCoolDowns() {
+    return this.abilityCooldownAlertedBuffs.size > 0;
+  },
+
+  hasStacks() {
+    return this.stacks.filter(stack => stack.buffDuration > 0).length > 0;
+  },
+
   async init() {
     this.loadOverlaySettings();
     const updateLoop = async () => {
@@ -320,7 +329,8 @@ Alpine.data('buffsData', () => ({
       if (!this.isDragging && !this.resetInprogress) {
         const existingBuffs = await buffManager.getActiveBuffs();
         if (existingBuffs) {
-          this.buffs = existingBuffs.map(b => ({ ...b }));
+          this.buffs = existingBuffs.filter((buff) => !buff.isStack).map(b => ({ ...b }));
+          this.stacks = existingBuffs.filter((buff) => buff.isStack).map(b => ({ ...b }));
         }
 
         const existingTargetDebuffs = await buffManager.getTargetDebuffs(this.overlaySettings.trackedTargetDebuffs);
