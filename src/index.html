@@ -24,11 +24,11 @@
           </svg>
           Settings
         </button>
-        <button class="tab-button" :class="{ 'active': activeTab === 'info' }" @click="activeTab = 'info'">
+        <button class="tab-button" :class="{ 'active': activeTab === 'help' }" @click="activeTab = 'help'">
           <svg viewBox="0 0 24 24" class="tab-icon" fill="currentColor">
-            <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+            <path d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z" />
           </svg>
-          Info
+          Help
         </button>
       </div>
 
@@ -337,16 +337,8 @@
             <button x-on:click="resetSettings()" class="nisbutton">Reset All Settings</button>
           </div>
         </div>
-
-        <div class="settings-section">
-          <h3>Todo</h3>
-          <ul>
-            <li>Profile saving/switching, right now there is just a self managed global profile.</li>
-            <li>Ability to choose from multiple audio queues</li>
-          </ul>
-        </div>
       </div>
-      <div class="tab-content" x-show="activeTab === 'info'">
+      <div class="tab-content" x-show="activeTab === 'help'">
         <div class="settings-section">
           <h2>How it works</h2>
           <p>
@@ -356,6 +348,7 @@
           <h2>Setup</h2>
           <p></p>
           <ul>
+            <li>To set the buffs overlay position, use the overlay buttons in the settings tab.</li>
             <li>
               To pin a buff toggle the
               <svg viewBox="0 0 24 24" class="pin-icon" fill="currentColor">

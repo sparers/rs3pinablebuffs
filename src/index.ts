@@ -361,7 +361,9 @@ Alpine.data('buffsData', () => ({
         await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const scale = this.overlaySettings.scale;
-        await captureElementAsOverlay("buffs-output", BUFFS_OVERLAY_GROUP, scale);
+        if (this.buffs.filter(buff => buff.isPinned).length > 0) {
+          await captureElementAsOverlay("buffs-output", BUFFS_OVERLAY_GROUP, scale);
+        }
         await captureElementAsOverlay("alerted-buffs", CENTER_OVERLAY_GROUP, scale);
       }
       setTimeout(updateLoop, 150);
