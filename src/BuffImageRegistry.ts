@@ -177,7 +177,7 @@ export class BuffImageRegistry {
         name: "Powder of Penance", image: this.Buffs.PowderOfPenance, threshold: 130, path: './imgs/icons/powder_of_penance.png',
       },
       {
-        name: "Prayer Renewal", image: this.Buffs.prayerRenewActive, threshold: 225, path: './imgs/icons/prayer_renewal.data.png',
+        name: "Prayer Renewal", image: this.Buffs.prayerRenewActive, threshold: 225, path: './imgs/icons/prayer_renewal.png',
       },
       {
         name: "Death Spark", image: this.Buffs.DeathSpark, threshold: 300, path: './imgs/icons/death_spark.png',
