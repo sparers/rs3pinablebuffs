@@ -8579,13 +8579,13 @@ var BuffImageRegistry = /** @class */ (function () {
                                 isTarget: false,
                                 isStack: false
                             },
-                            {
-                                name: "Glacial Embrace", image: this.Buffs.glacialEmbrace, threshold: 60, path: './imgs/icons/glacial_embrace.png',
-                                abilityCooldown: 0,
-                                hasAbilityCooldown: false,
-                                isTarget: false,
-                                isStack: true
-                            },
+                            // {
+                            //   name: "Glacial Embrace", image: this.Buffs.glacialEmbrace, threshold: 60, path: './imgs/icons/glacial_embrace.png',
+                            //   abilityCooldown: 0,
+                            //   hasAbilityCooldown: false,
+                            //   isTarget: false,
+                            //   isStack: true
+                            // },
                             {
                                 name: "Blood Tithe", image: this.Buffs.bloodTithe, threshold: 60, path: './imgs/icons/blood_tithe.png',
                                 abilityCooldown: 0,
@@ -8657,25 +8657,25 @@ var BuffImageRegistry = /** @class */ (function () {
                                 isTarget: false,
                                 isStack: false
                             },
-                            {
-                                name: "Deathspore Arrows", image: this.Debuffs.FeastingSpores, threshold: 18, path: './imgs/buffs/deathspore_arrows.data.png',
-                                abilityCooldown: 0,
-                                hasAbilityCooldown: false,
-                                isTarget: false,
-                                isStack: false
-                            },
-                            {
-                                name: "Icy chill",
-                                image: this.Buffs.icyChill,
-                                threshold: 400,
-                                path: './imgs/icons/icy_chill.png',
-                                hasAbilityCooldown: false,
-                                abilityCooldown: 0,
-                                isStack: true,
-                                isTarget: false,
-                                debug: true,
-                                useAggressiveSearh: false
-                            },
+                            // {
+                            //   name: "Deathspore Arrows", image: this.Debuffs.FeastingSpores, threshold: 18, path: './imgs/buffs/deathspore_arrows.data.png',
+                            //   abilityCooldown: 0,
+                            //   hasAbilityCooldown: false,
+                            //   isTarget: false,
+                            //   isStack: false
+                            // },
+                            // {
+                            //   name: "Icy chill",
+                            //   image: this.Buffs.icyChill,
+                            //   threshold: 400,
+                            //   path: './imgs/icons/icy_chill.png',
+                            //   hasAbilityCooldown: false,
+                            //   abilityCooldown: 0,
+                            //   isStack: true,
+                            //   isTarget: false,
+                            //   debug: true,
+                            //   useAggressiveSearh: false
+                            // },
                             {
                                 name: "Cannon Decay", image: this.Debuffs.cannon, threshold: 120, path: './imgs/icons/cannon.png',
                                 abilityCooldown: 0,
@@ -10374,6 +10374,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var _a;
 
 
 
@@ -10388,6 +10389,42 @@ var storage = new _LocalStorageHelper__WEBPACK_IMPORTED_MODULE_9__.LocalStorageH
 var buffManager = new _BuffManager__WEBPACK_IMPORTED_MODULE_6__.BuffManager(storage);
 var BUFFS_OVERLAY_GROUP = 'buffsOverlayGroup';
 var CENTER_OVERLAY_GROUP = 'centerOverlayGroup';
+var OVERLAY_GROUP_LABELS = (_a = {},
+    _a[BUFFS_OVERLAY_GROUP] = 'Buff/Debuffs',
+    _a[CENTER_OVERLAY_GROUP] = 'Alerts',
+    _a);
+var REFRESH_INTERVAL_MS = 150;
+var POSITION_TRACK_INTERVAL_MS = 100;
+var SCALE_RANGE = { min: 1, max: 3 };
+var ALERT_THRESHOLD_RANGE = { min: 1, max: 60 };
+var createDefaultTrackedTargetDebuffs = function () { return ({
+    vulnerability: false,
+    deathMark: false,
+    bloat: false,
+    smokeCloud: false
+}); };
+var createDefaultOverlaySettings = function () { return ({
+    scale: SCALE_RANGE.min,
+    buffDurationAlertThreshold: 10,
+    abilityCooldownAlertThreshold: 5,
+    trackedTargetDebuffs: createDefaultTrackedTargetDebuffs(),
+    targetDebuffAudioAlert: true
+}); };
+var clamp = function (value, min, max) {
+    return Math.max(min, Math.min(max, value));
+};
+var mergeTrackedTargetDebuffs = function (source) { return (__assign(__assign({}, createDefaultTrackedTargetDebuffs()), (source !== null && source !== void 0 ? source : {}))); };
+var playAudioCue = function (audio) {
+    audio.currentTime = 0;
+    audio.play().catch(function (err) { return console.log('Audio play failed:', err); });
+};
+var stopAudioAfter = function (audio, delaySeconds) {
+    window.setTimeout(function () { return audio.pause(); }, delaySeconds * 1000);
+};
+var cloneEntries = function (entries) { return entries.map(function (entry) { return (__assign({}, entry)); }); };
+var waitForNextFrame = function () {
+    return new Promise(function (resolve) { return requestAnimationFrame(function () { return requestAnimationFrame(function () { return resolve(); }); }); });
+};
 // Initialize Alt1 app
 if (window.alt1) {
     alt1__WEBPACK_IMPORTED_MODULE_1__.identifyApp("./appconfig.json");
@@ -10419,30 +10456,8 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
         buffs: false,
         alerts: false
     },
-    overlaySettings: {
-        scale: 1,
-        buffDurationAlertThreshold: 10,
-        abilityCooldownAlertThreshold: 5,
-        trackedTargetDebuffs: {
-            vulnerability: false,
-            deathMark: false,
-            bloat: false,
-            smokeCloud: false
-        },
-        targetDebuffAudioAlert: true
-    },
-    overlaySettingsForm: {
-        scale: 1,
-        buffDurationAlertThreshold: 10,
-        abilityCooldownAlertThreshold: 5,
-        trackedTargetDebuffs: {
-            vulnerability: false,
-            deathMark: false,
-            bloat: false,
-            smokeCloud: false
-        },
-        targetDebuffAudioAlert: true
-    },
+    overlaySettings: createDefaultOverlaySettings(),
+    overlaySettingsForm: createDefaultOverlaySettings(),
     formatTime: function (seconds) {
         var mins = Math.floor(seconds / 60);
         var secs = seconds % 60;
@@ -10482,25 +10497,15 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
         });
     },
     startPositionTracking: function (group) {
+        var _a;
         var placeholderGroup = "".concat(group, "-placeholder");
-        var mousePos = alt1__WEBPACK_IMPORTED_MODULE_1__.getMousePosition();
-        // Draw placeholder at mouse position every 100ms
-        var intervalId = window.setInterval(function () {
+        var label = (_a = OVERLAY_GROUP_LABELS[group]) !== null && _a !== void 0 ? _a : group;
+        return window.setInterval(function () {
             var mousePos = alt1__WEBPACK_IMPORTED_MODULE_1__.getMousePosition();
-            var groupName = '';
-            if (group === 'buffsOverlayGroup') {
-                groupName = 'Buff/Debuffs';
-            }
-            else if (group === 'centerOverlayGroup') {
-                groupName = 'Alerts';
-            }
-            // Clear previous placeholder
             alt1.overLayClearGroup(placeholderGroup);
             alt1.overLaySetGroup(placeholderGroup);
-            // Draw text overlay centered inside the rectangle
-            alt1.overLayTextEx('Press Alt+1 to set the ' + groupName + ' group position.', alt1__WEBPACK_IMPORTED_MODULE_1__.mixColor(255, 255, 255), 18, mousePos.x, mousePos.y, 9999, '', true, true);
-        }, 100);
-        return intervalId;
+            alt1.overLayTextEx("Press Alt+1 to set the ".concat(label, " group position."), alt1__WEBPACK_IMPORTED_MODULE_1__.mixColor(255, 255, 255), 18, mousePos.x, mousePos.y, 9999, '', true, true);
+        }, POSITION_TRACK_INTERVAL_MS);
     },
     stopPositionTracking: function (group, intervalId) {
         // Stop the interval
@@ -10510,58 +10515,43 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
         alt1.overLayClearGroup(placeholderGroup);
     },
     saveOverlaySettings: function () {
-        // Validate and copy form values to actual settings
-        this.overlaySettings.scale = Math.max(1, Math.min(3, this.overlaySettingsForm.scale));
-        this.overlaySettings.buffDurationAlertThreshold = Math.max(1, Math.min(60, this.overlaySettingsForm.buffDurationAlertThreshold));
-        this.overlaySettings.abilityCooldownAlertThreshold = Math.max(1, Math.min(60, this.overlaySettingsForm.abilityCooldownAlertThreshold));
-        this.overlaySettings.trackedTargetDebuffs = __assign({}, this.overlaySettingsForm.trackedTargetDebuffs);
-        this.overlaySettings.targetDebuffAudioAlert = this.overlaySettingsForm.targetDebuffAudioAlert;
-        // Update form with clamped values
-        this.overlaySettingsForm.scale = this.overlaySettings.scale;
-        this.overlaySettingsForm.buffDurationAlertThreshold = this.overlaySettings.buffDurationAlertThreshold;
-        this.overlaySettingsForm.abilityCooldownAlertThreshold = this.overlaySettings.abilityCooldownAlertThreshold;
+        var scale = clamp(this.overlaySettingsForm.scale, SCALE_RANGE.min, SCALE_RANGE.max);
+        var buffDuration = clamp(this.overlaySettingsForm.buffDurationAlertThreshold, ALERT_THRESHOLD_RANGE.min, ALERT_THRESHOLD_RANGE.max);
+        var abilityCooldown = clamp(this.overlaySettingsForm.abilityCooldownAlertThreshold, ALERT_THRESHOLD_RANGE.min, ALERT_THRESHOLD_RANGE.max);
+        this.overlaySettings = __assign(__assign({}, this.overlaySettings), { scale: scale, buffDurationAlertThreshold: buffDuration, abilityCooldownAlertThreshold: abilityCooldown, trackedTargetDebuffs: __assign({}, this.overlaySettingsForm.trackedTargetDebuffs), targetDebuffAudioAlert: this.overlaySettingsForm.targetDebuffAudioAlert });
+        this.overlaySettingsForm = __assign(__assign({}, this.overlaySettings), { trackedTargetDebuffs: __assign({}, this.overlaySettings.trackedTargetDebuffs) });
         storage.save('overlaySettings', this.overlaySettings);
     },
     loadOverlaySettings: function () {
-        var _a, _b, _c, _d, _e;
+        var _this = this;
+        var _a, _b, _c, _d;
         var saved = storage.get('overlaySettings');
-        if (saved) {
-            this.overlaySettings = {
-                scale: (_a = saved.scale) !== null && _a !== void 0 ? _a : 1,
-                buffDurationAlertThreshold: (_b = saved.buffDurationAlertThreshold) !== null && _b !== void 0 ? _b : 10,
-                abilityCooldownAlertThreshold: (_c = saved.abilityCooldownAlertThreshold) !== null && _c !== void 0 ? _c : 5,
-                trackedTargetDebuffs: (_d = saved.trackedTargetDebuffs) !== null && _d !== void 0 ? _d : {
-                    vulnerability: false,
-                    deathMark: false,
-                    bloat: false,
-                    smokeCloud: false
-                },
-                targetDebuffAudioAlert: (_e = saved.targetDebuffAudioAlert) !== null && _e !== void 0 ? _e : true
-            };
-        }
-        else {
-            this.overlaySettings = {
-                scale: 1,
-                buffDurationAlertThreshold: 10,
-                abilityCooldownAlertThreshold: 5,
-                trackedTargetDebuffs: {
-                    vulnerability: false,
-                    deathMark: false,
-                    bloat: false,
-                    smokeCloud: false
-                },
-                targetDebuffAudioAlert: true
-            };
+        var defaults = createDefaultOverlaySettings();
+        var savedTracked = mergeTrackedTargetDebuffs(saved === null || saved === void 0 ? void 0 : saved.trackedTargetDebuffs);
+        var overlaySettings = saved
+            ? {
+                scale: (_a = saved.scale) !== null && _a !== void 0 ? _a : defaults.scale,
+                buffDurationAlertThreshold: (_b = saved.buffDurationAlertThreshold) !== null && _b !== void 0 ? _b : defaults.buffDurationAlertThreshold,
+                abilityCooldownAlertThreshold: (_c = saved.abilityCooldownAlertThreshold) !== null && _c !== void 0 ? _c : defaults.abilityCooldownAlertThreshold,
+                trackedTargetDebuffs: savedTracked,
+                targetDebuffAudioAlert: (_d = saved.targetDebuffAudioAlert) !== null && _d !== void 0 ? _d : defaults.targetDebuffAudioAlert
+            }
+            : defaults;
+        this.overlaySettings = __assign(__assign({}, overlaySettings), { scale: clamp(overlaySettings.scale, SCALE_RANGE.min, SCALE_RANGE.max), buffDurationAlertThreshold: clamp(overlaySettings.buffDurationAlertThreshold, ALERT_THRESHOLD_RANGE.min, ALERT_THRESHOLD_RANGE.max), abilityCooldownAlertThreshold: clamp(overlaySettings.abilityCooldownAlertThreshold, ALERT_THRESHOLD_RANGE.min, ALERT_THRESHOLD_RANGE.max) });
+        this.overlaySettingsForm = __assign(__assign({}, this.overlaySettings), { trackedTargetDebuffs: __assign({}, this.overlaySettings.trackedTargetDebuffs) });
+        var hasChanges = !saved ||
+            saved.scale !== this.overlaySettings.scale ||
+            saved.buffDurationAlertThreshold !== this.overlaySettings.buffDurationAlertThreshold ||
+            saved.abilityCooldownAlertThreshold !== this.overlaySettings.abilityCooldownAlertThreshold ||
+            saved.targetDebuffAudioAlert !== this.overlaySettings.targetDebuffAudioAlert ||
+            Object.keys(savedTracked).some(function (key) { return savedTracked[key] !== _this.overlaySettings.trackedTargetDebuffs[key]; });
+        if (hasChanges) {
             storage.save('overlaySettings', this.overlaySettings);
         }
-        // Copy to form
-        this.overlaySettingsForm = __assign({}, this.overlaySettings);
     },
     resetSettings: function () {
         this.resetInprogress = true;
         storage.clear();
-        this.buffs = [];
-        this.alertedBuffs.clear();
         location.reload();
         this.resetInprogress = false;
     },
@@ -10604,7 +10594,9 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
     },
     hasAlertedBuffs: function () {
         var _this = this;
-        return this.buffs.some(function (buff) { return _this.isAlerted(buff.name); }) || this.targetDebuffs.length > 0 || this.stacks.filter(function (stack) { return stack.cooldown > 0; }).length > 0;
+        return (this.buffs.some(function (buff) { return _this.isAlerted(buff.name); }) ||
+            this.targetDebuffs.length > 0 ||
+            this.stacks.some(function (stack) { return stack.cooldown > 0; }));
     },
     isLowBuffDuration: function (buff) {
         if (buff.hasAbilityCooldown) {
@@ -10613,8 +10605,8 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
         return buff.buffDuration <= this.overlaySettings.buffDurationAlertThreshold && buff.buffDuration > 0;
     },
     isLowAbilityCooldown: function (buff) {
-        var isLowAbilityCooldown = buff.abilityCooldown <= this.overlaySettings.abilityCooldownAlertThreshold && buff.abilityCooldown > 0;
-        return isLowAbilityCooldown;
+        return (buff.abilityCooldown > 0 &&
+            buff.abilityCooldown <= this.overlaySettings.abilityCooldownAlertThreshold);
     },
     checkAndPlayAlerts: function () {
         var _this = this;
@@ -10623,11 +10615,8 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
             if (isLowBuffDuration && buff.isPinned && !_this.alertedBuffs.has(buff.name) && !buff.hasAbilityCooldown && !buff.isStack) {
                 // Play alert sound
                 if (buff.isAudioQueued) {
-                    _this.clockTickingAudio.currentTime = 0;
-                    _this.clockTickingAudio.play().catch(function (err) { return console.log('Audio play failed:', err); });
-                    setTimeout(function () {
-                        _this.clockTickingAudio.pause();
-                    }, buff.buffDuration * 1000);
+                    playAudioCue(_this.clockTickingAudio);
+                    stopAudioAfter(_this.clockTickingAudio, buff.buffDuration);
                 }
                 // Mark this buff as alerted
                 _this.alertedBuffs.add(buff.name);
@@ -10640,8 +10629,7 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
             if (isLowAbilityCooldown && buff.isPinned && !_this.abilityCooldownAlertedBuffs.has(buff.name)) {
                 // Play long alert sound
                 if (buff.isAudioQueued) {
-                    _this.popAlertAudio.currentTime = 0;
-                    _this.popAlertAudio.play().catch(function (err) { return console.log('Audio play failed:', err); });
+                    playAudioCue(_this.popAlertAudio);
                 }
                 // Mark this buff as alerted
                 _this.abilityCooldownAlertedBuffs.add(buff.name);
@@ -10652,8 +10640,7 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
         });
         this.targetDebuffs.forEach(function (debuff) {
             if (!_this.alertedDebuffs.has(debuff.name) && debuff.abilityCooldown === 0 && _this.overlaySettings.targetDebuffAudioAlert) {
-                _this.popAlertAudio.currentTime = 0;
-                _this.popAlertAudio.play().catch(function (err) { return console.log('Audio play failed:', err); });
+                playAudioCue(_this.popAlertAudio);
                 // Mark this debuff as alerted
                 _this.alertedDebuffs.add(debuff.name);
             }
@@ -10673,7 +10660,7 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
         return this.abilityCooldownAlertedBuffs.size > 0;
     },
     hasStacks: function () {
-        return this.stacks.filter(function (stack) { return stack.buffDuration > 0; }).length > 0;
+        return this.stacks.some(function (stack) { return stack.buffDuration > 0; });
     },
     init: function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -10683,45 +10670,38 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
                 this.loadOverlaySettings();
                 this.checkOverlayPositions();
                 updateLoop = function () { return __awaiter(_this, void 0, void 0, function () {
-                    var existingBuffs, existingTargetDebuffs, scale;
+                    var activeBuffs, targetDebuffs, scale;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 if (!(!this.isDragging && !this.resetInprogress)) return [3 /*break*/, 7];
                                 return [4 /*yield*/, buffManager.getActiveBuffs()];
                             case 1:
-                                existingBuffs = _a.sent();
-                                if (existingBuffs) {
-                                    this.buffs = existingBuffs.filter(function (buff) { return !buff.isStack; }).map(function (b) { return (__assign({}, b)); });
-                                    this.stacks = existingBuffs.filter(function (buff) { return buff.isStack; }).map(function (b) { return (__assign({}, b)); });
-                                }
+                                activeBuffs = _a.sent();
+                                this.buffs = cloneEntries(activeBuffs.filter(function (buff) { return !buff.isStack; }));
+                                this.stacks = cloneEntries(activeBuffs.filter(function (buff) { return buff.isStack; }));
                                 return [4 /*yield*/, buffManager.getTargetDebuffs(this.overlaySettings.trackedTargetDebuffs)];
                             case 2:
-                                existingTargetDebuffs = _a.sent();
-                                if (existingTargetDebuffs) {
-                                    this.targetDebuffs = existingTargetDebuffs.map(function (b) { return (__assign({}, b)); });
-                                    ;
-                                }
-                                if (existingBuffs || existingTargetDebuffs) {
+                                targetDebuffs = _a.sent();
+                                this.targetDebuffs = cloneEntries(targetDebuffs);
+                                if (activeBuffs.length > 0 || targetDebuffs.length > 0) {
                                     this.checkAndPlayAlerts();
                                 }
-                                // Wait for Alpine to update the DOM
-                                return [4 /*yield*/, new Promise(function (resolve) { return requestAnimationFrame(function () { return requestAnimationFrame(resolve); }); })];
+                                return [4 /*yield*/, waitForNextFrame()];
                             case 3:
-                                // Wait for Alpine to update the DOM
                                 _a.sent();
                                 scale = this.overlaySettings.scale;
-                                if (!(this.buffs.filter(function (buff) { return buff.isPinned; }).length > 0)) return [3 /*break*/, 5];
-                                return [4 /*yield*/, captureElementAsOverlay("buffs-output", BUFFS_OVERLAY_GROUP, scale)];
+                                if (!this.buffs.some(function (buff) { return buff.isPinned; })) return [3 /*break*/, 5];
+                                return [4 /*yield*/, captureElementAsOverlay('buffs-output', BUFFS_OVERLAY_GROUP, scale)];
                             case 4:
                                 _a.sent();
                                 _a.label = 5;
-                            case 5: return [4 /*yield*/, captureElementAsOverlay("alerted-buffs", CENTER_OVERLAY_GROUP, scale)];
+                            case 5: return [4 /*yield*/, captureElementAsOverlay('alerted-buffs', CENTER_OVERLAY_GROUP, scale)];
                             case 6:
                                 _a.sent();
                                 _a.label = 7;
                             case 7:
-                                setTimeout(updateLoop, 150);
+                                window.setTimeout(updateLoop, REFRESH_INTERVAL_MS);
                                 return [2 /*return*/];
                         }
                     });

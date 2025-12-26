@@ -15,6 +15,53 @@ const buffManager = new BuffManager(storage);
 const BUFFS_OVERLAY_GROUP = 'buffsOverlayGroup';
 const CENTER_OVERLAY_GROUP = 'centerOverlayGroup';
 
+const OVERLAY_GROUP_LABELS: Record<string, string> = {
+  [BUFFS_OVERLAY_GROUP]: 'Buff/Debuffs',
+  [CENTER_OVERLAY_GROUP]: 'Alerts'
+};
+
+const REFRESH_INTERVAL_MS = 150;
+const POSITION_TRACK_INTERVAL_MS = 100;
+const SCALE_RANGE = { min: 1, max: 3 };
+const ALERT_THRESHOLD_RANGE = { min: 1, max: 60 };
+
+const createDefaultTrackedTargetDebuffs = () => ({
+  vulnerability: false,
+  deathMark: false,
+  bloat: false,
+  smokeCloud: false
+});
+
+const createDefaultOverlaySettings = (): OverlaySettings => ({
+  scale: SCALE_RANGE.min,
+  buffDurationAlertThreshold: 10,
+  abilityCooldownAlertThreshold: 5,
+  trackedTargetDebuffs: createDefaultTrackedTargetDebuffs(),
+  targetDebuffAudioAlert: true
+});
+
+const clamp = (value: number, min: number, max: number): number =>
+  Math.max(min, Math.min(max, value));
+
+const mergeTrackedTargetDebuffs = (source?: Record<string, boolean>) => ({
+  ...createDefaultTrackedTargetDebuffs(),
+  ...(source ?? {})
+});
+
+const playAudioCue = (audio: HTMLAudioElement): void => {
+  audio.currentTime = 0;
+  audio.play().catch(err => console.log('Audio play failed:', err));
+};
+
+const stopAudioAfter = (audio: HTMLAudioElement, delaySeconds: number): void => {
+  window.setTimeout(() => audio.pause(), delaySeconds * 1000);
+};
+
+const cloneEntries = <T extends object>(entries: T[]): T[] => entries.map(entry => ({ ...entry }));
+
+const waitForNextFrame = () =>
+  new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+
 // Initialize Alt1 app
 if (window.alt1) {
   a1lib.identifyApp("./appconfig.json");
@@ -48,30 +95,8 @@ Alpine.data('buffsData', () => ({
     buffs: false,
     alerts: false
   },
-  overlaySettings: {
-    scale: 1,
-    buffDurationAlertThreshold: 10,
-    abilityCooldownAlertThreshold: 5,
-    trackedTargetDebuffs: {
-      vulnerability: false,
-      deathMark: false,
-      bloat: false,
-      smokeCloud: false
-    },
-    targetDebuffAudioAlert: true
-  },
-  overlaySettingsForm: {
-    scale: 1,
-    buffDurationAlertThreshold: 10,
-    abilityCooldownAlertThreshold: 5,
-    trackedTargetDebuffs: {
-      vulnerability: false,
-      deathMark: false,
-      bloat: false,
-      smokeCloud: false
-    },
-    targetDebuffAudioAlert: true
-  },
+  overlaySettings: createDefaultOverlaySettings(),
+  overlaySettingsForm: createDefaultOverlaySettings(),
 
   formatTime(seconds: number): string {
     const mins = Math.floor(seconds / 60);
@@ -113,26 +138,15 @@ Alpine.data('buffsData', () => ({
 
   startPositionTracking(group: string): number {
     const placeholderGroup = `${group}-placeholder`;
-    const mousePos = a1lib.getMousePosition();
-    // Draw placeholder at mouse position every 100ms
-    const intervalId = window.setInterval(() => {
+    const label = OVERLAY_GROUP_LABELS[group] ?? group;
+
+    return window.setInterval(() => {
       const mousePos = a1lib.getMousePosition();
 
-      var groupName = '';
-
-      if (group === 'buffsOverlayGroup') {
-        groupName = 'Buff/Debuffs';
-      } else if (group === 'centerOverlayGroup') {
-        groupName = 'Alerts';
-      }
-
-      // Clear previous placeholder
       alt1.overLayClearGroup(placeholderGroup);
       alt1.overLaySetGroup(placeholderGroup);
-
-      // Draw text overlay centered inside the rectangle
       alt1.overLayTextEx(
-        'Press Alt+1 to set the ' + groupName + ' group position.',
+        `Press Alt+1 to set the ${label} group position.`,
         a1lib.mixColor(255, 255, 255),
         18,
         mousePos.x,
@@ -142,9 +156,7 @@ Alpine.data('buffsData', () => ({
         true,
         true
       );
-    }, 100);
-
-    return intervalId;
+    }, POSITION_TRACK_INTERVAL_MS);
   },
 
   stopPositionTracking(group: string, intervalId: number) {
@@ -157,60 +169,87 @@ Alpine.data('buffsData', () => ({
   },
 
   saveOverlaySettings() {
-    // Validate and copy form values to actual settings
-    this.overlaySettings.scale = Math.max(1, Math.min(3, this.overlaySettingsForm.scale));
-    this.overlaySettings.buffDurationAlertThreshold = Math.max(1, Math.min(60, this.overlaySettingsForm.buffDurationAlertThreshold));
-    this.overlaySettings.abilityCooldownAlertThreshold = Math.max(1, Math.min(60, this.overlaySettingsForm.abilityCooldownAlertThreshold));
-    this.overlaySettings.trackedTargetDebuffs = { ...this.overlaySettingsForm.trackedTargetDebuffs };
-    this.overlaySettings.targetDebuffAudioAlert = this.overlaySettingsForm.targetDebuffAudioAlert;
+    const scale = clamp(this.overlaySettingsForm.scale, SCALE_RANGE.min, SCALE_RANGE.max);
+    const buffDuration = clamp(
+      this.overlaySettingsForm.buffDurationAlertThreshold,
+      ALERT_THRESHOLD_RANGE.min,
+      ALERT_THRESHOLD_RANGE.max
+    );
+    const abilityCooldown = clamp(
+      this.overlaySettingsForm.abilityCooldownAlertThreshold,
+      ALERT_THRESHOLD_RANGE.min,
+      ALERT_THRESHOLD_RANGE.max
+    );
 
-    // Update form with clamped values
-    this.overlaySettingsForm.scale = this.overlaySettings.scale;
-    this.overlaySettingsForm.buffDurationAlertThreshold = this.overlaySettings.buffDurationAlertThreshold;
-    this.overlaySettingsForm.abilityCooldownAlertThreshold = this.overlaySettings.abilityCooldownAlertThreshold;
+    this.overlaySettings = {
+      ...this.overlaySettings,
+      scale,
+      buffDurationAlertThreshold: buffDuration,
+      abilityCooldownAlertThreshold: abilityCooldown,
+      trackedTargetDebuffs: { ...this.overlaySettingsForm.trackedTargetDebuffs },
+      targetDebuffAudioAlert: this.overlaySettingsForm.targetDebuffAudioAlert
+    };
+
+    this.overlaySettingsForm = {
+      ...this.overlaySettings,
+      trackedTargetDebuffs: { ...this.overlaySettings.trackedTargetDebuffs }
+    };
 
     storage.save('overlaySettings', this.overlaySettings);
   },
 
   loadOverlaySettings() {
     const saved = storage.get<OverlaySettings>('overlaySettings');
-    if (saved) {
-      this.overlaySettings = {
-        scale: saved.scale ?? 1,
-        buffDurationAlertThreshold: saved.buffDurationAlertThreshold ?? 10,
-        abilityCooldownAlertThreshold: saved.abilityCooldownAlertThreshold ?? 5,
-        trackedTargetDebuffs: saved.trackedTargetDebuffs ?? {
-          vulnerability: false,
-          deathMark: false,
-          bloat: false,
-          smokeCloud: false
-        },
-        targetDebuffAudioAlert: saved.targetDebuffAudioAlert ?? true
-      };
-    } else {
-      this.overlaySettings = {
-        scale: 1,
-        buffDurationAlertThreshold: 10,
-        abilityCooldownAlertThreshold: 5,
-        trackedTargetDebuffs: {
-          vulnerability: false,
-          deathMark: false,
-          bloat: false,
-          smokeCloud: false
-        },
-        targetDebuffAudioAlert: true
-      };
+    const defaults = createDefaultOverlaySettings();
+    const savedTracked = mergeTrackedTargetDebuffs(saved?.trackedTargetDebuffs);
+    const overlaySettings = saved
+      ? {
+        scale: saved.scale ?? defaults.scale,
+        buffDurationAlertThreshold: saved.buffDurationAlertThreshold ?? defaults.buffDurationAlertThreshold,
+        abilityCooldownAlertThreshold: saved.abilityCooldownAlertThreshold ?? defaults.abilityCooldownAlertThreshold,
+        trackedTargetDebuffs: savedTracked,
+        targetDebuffAudioAlert: saved.targetDebuffAudioAlert ?? defaults.targetDebuffAudioAlert
+      }
+      : defaults;
+
+    this.overlaySettings = {
+      ...overlaySettings,
+      scale: clamp(overlaySettings.scale, SCALE_RANGE.min, SCALE_RANGE.max),
+      buffDurationAlertThreshold: clamp(
+        overlaySettings.buffDurationAlertThreshold,
+        ALERT_THRESHOLD_RANGE.min,
+        ALERT_THRESHOLD_RANGE.max
+      ),
+      abilityCooldownAlertThreshold: clamp(
+        overlaySettings.abilityCooldownAlertThreshold,
+        ALERT_THRESHOLD_RANGE.min,
+        ALERT_THRESHOLD_RANGE.max
+      )
+    };
+
+    this.overlaySettingsForm = {
+      ...this.overlaySettings,
+      trackedTargetDebuffs: { ...this.overlaySettings.trackedTargetDebuffs }
+    };
+
+    const hasChanges =
+      !saved ||
+      saved.scale !== this.overlaySettings.scale ||
+      saved.buffDurationAlertThreshold !== this.overlaySettings.buffDurationAlertThreshold ||
+      saved.abilityCooldownAlertThreshold !== this.overlaySettings.abilityCooldownAlertThreshold ||
+      saved.targetDebuffAudioAlert !== this.overlaySettings.targetDebuffAudioAlert ||
+      Object.keys(savedTracked).some(
+        key => savedTracked[key] !== this.overlaySettings.trackedTargetDebuffs[key]
+      );
+
+    if (hasChanges) {
       storage.save('overlaySettings', this.overlaySettings);
     }
-    // Copy to form
-    this.overlaySettingsForm = { ...this.overlaySettings };
   },
 
   resetSettings() {
     this.resetInprogress = true;
     storage.clear();
-    this.buffs = [];
-    this.alertedBuffs.clear();
     location.reload();
     this.resetInprogress = false;
   },
@@ -259,7 +298,11 @@ Alpine.data('buffsData', () => ({
     }
   },
   hasAlertedBuffs() {
-    return this.buffs.some(buff => this.isAlerted(buff.name)) || this.targetDebuffs.length > 0 || this.stacks.filter(stack => stack.cooldown > 0).length > 0;
+    return (
+      this.buffs.some(buff => this.isAlerted(buff.name)) ||
+      this.targetDebuffs.length > 0 ||
+      this.stacks.some(stack => stack.cooldown > 0)
+    );
   },
 
   isLowBuffDuration(buff) {
@@ -270,8 +313,10 @@ Alpine.data('buffsData', () => ({
   },
 
   isLowAbilityCooldown(buff) {
-    const isLowAbilityCooldown = buff.abilityCooldown <= this.overlaySettings.abilityCooldownAlertThreshold && buff.abilityCooldown > 0;
-    return isLowAbilityCooldown;
+    return (
+      buff.abilityCooldown > 0 &&
+      buff.abilityCooldown <= this.overlaySettings.abilityCooldownAlertThreshold
+    );
   },
 
   checkAndPlayAlerts() {
@@ -281,11 +326,8 @@ Alpine.data('buffsData', () => ({
       if (isLowBuffDuration && buff.isPinned && !this.alertedBuffs.has(buff.name) && !buff.hasAbilityCooldown && !buff.isStack) {
         // Play alert sound
         if (buff.isAudioQueued) {
-          this.clockTickingAudio.currentTime = 0;
-          this.clockTickingAudio.play().catch(err => console.log('Audio play failed:', err));
-          setTimeout(() => {
-            this.clockTickingAudio.pause();
-          }, buff.buffDuration * 1000);
+          playAudioCue(this.clockTickingAudio);
+          stopAudioAfter(this.clockTickingAudio, buff.buffDuration);
         }
         // Mark this buff as alerted
         this.alertedBuffs.add(buff.name);
@@ -298,8 +340,7 @@ Alpine.data('buffsData', () => ({
       if (isLowAbilityCooldown && buff.isPinned && !this.abilityCooldownAlertedBuffs.has(buff.name)) {
         // Play long alert sound
         if (buff.isAudioQueued) {
-          this.popAlertAudio.currentTime = 0;
-          this.popAlertAudio.play().catch(err => console.log('Audio play failed:', err));
+          playAudioCue(this.popAlertAudio);
         }
         // Mark this buff as alerted
         this.abilityCooldownAlertedBuffs.add(buff.name);
@@ -310,8 +351,7 @@ Alpine.data('buffsData', () => ({
 
     this.targetDebuffs.forEach(debuff => {
       if (!this.alertedDebuffs.has(debuff.name) && debuff.abilityCooldown === 0 && this.overlaySettings.targetDebuffAudioAlert) {
-        this.popAlertAudio.currentTime = 0;
-        this.popAlertAudio.play().catch(err => console.log('Audio play failed:', err));
+        playAudioCue(this.popAlertAudio);
         // Mark this debuff as alerted
         this.alertedDebuffs.add(debuff.name);
       } else if (this.alertedDebuffs.has(debuff.name) && debuff.abilityCooldown === 1) {
@@ -332,7 +372,7 @@ Alpine.data('buffsData', () => ({
   },
 
   hasStacks() {
-    return this.stacks.filter(stack => stack.buffDuration > 0).length > 0;
+    return this.stacks.some(stack => stack.buffDuration > 0);
   },
 
   async init() {
@@ -341,31 +381,26 @@ Alpine.data('buffsData', () => ({
     const updateLoop = async () => {
       // Skip update if user is dragging buffs
       if (!this.isDragging && !this.resetInprogress) {
-        const existingBuffs = await buffManager.getActiveBuffs();
-        if (existingBuffs) {
-          this.buffs = existingBuffs.filter((buff) => !buff.isStack).map(b => ({ ...b }));
-          this.stacks = existingBuffs.filter((buff) => buff.isStack).map(b => ({ ...b }));
-        }
+        const activeBuffs = await buffManager.getActiveBuffs();
+        this.buffs = cloneEntries(activeBuffs.filter(buff => !buff.isStack));
+        this.stacks = cloneEntries(activeBuffs.filter(buff => buff.isStack));
 
-        const existingTargetDebuffs = await buffManager.getTargetDebuffs(this.overlaySettings.trackedTargetDebuffs);
-        if (existingTargetDebuffs) {
-          this.targetDebuffs = existingTargetDebuffs.map(b => ({ ...b }));;
-        }
+        const targetDebuffs = await buffManager.getTargetDebuffs(this.overlaySettings.trackedTargetDebuffs);
+        this.targetDebuffs = cloneEntries(targetDebuffs);
 
-        if (existingBuffs || existingTargetDebuffs) {
+        if (activeBuffs.length > 0 || targetDebuffs.length > 0) {
           this.checkAndPlayAlerts();
         }
 
-        // Wait for Alpine to update the DOM
-        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await waitForNextFrame();
 
         const scale = this.overlaySettings.scale;
-        if (this.buffs.filter(buff => buff.isPinned).length > 0) {
-          await captureElementAsOverlay("buffs-output", BUFFS_OVERLAY_GROUP, scale);
+        if (this.buffs.some(buff => buff.isPinned)) {
+          await captureElementAsOverlay('buffs-output', BUFFS_OVERLAY_GROUP, scale);
         }
-        await captureElementAsOverlay("alerted-buffs", CENTER_OVERLAY_GROUP, scale);
+        await captureElementAsOverlay('alerted-buffs', CENTER_OVERLAY_GROUP, scale);
       }
-      setTimeout(updateLoop, 150);
+      window.setTimeout(updateLoop, REFRESH_INTERVAL_MS);
     };
     updateLoop();
   }

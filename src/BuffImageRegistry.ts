@@ -402,13 +402,13 @@ export class BuffImageRegistry {
         isTarget: false,
         isStack: false
       },
-      {
-        name: "Glacial Embrace", image: this.Buffs.glacialEmbrace, threshold: 60, path: './imgs/icons/glacial_embrace.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: true
-      },
+      // {
+      //   name: "Glacial Embrace", image: this.Buffs.glacialEmbrace, threshold: 60, path: './imgs/icons/glacial_embrace.png',
+      //   abilityCooldown: 0,
+      //   hasAbilityCooldown: false,
+      //   isTarget: false,
+      //   isStack: true
+      // },
       {
         name: "Blood Tithe", image: this.Buffs.bloodTithe, threshold: 60, path: './imgs/icons/blood_tithe.png',
         abilityCooldown: 0,
@@ -481,25 +481,25 @@ export class BuffImageRegistry {
         isTarget: false,
         isStack: false
       },
-      {
-        name: "Deathspore Arrows", image: this.Debuffs.FeastingSpores, threshold: 18, path: './imgs/buffs/deathspore_arrows.data.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
-      },
-      {
-        name: "Icy chill",
-        image: this.Buffs.icyChill,
-        threshold: 400,
-        path: './imgs/icons/icy_chill.png',
-        hasAbilityCooldown: false,
-        abilityCooldown: 0,
-        isStack: true,
-        isTarget: false,
-        debug: true,
-        useAggressiveSearh: false
-      },
+      // {
+      //   name: "Deathspore Arrows", image: this.Debuffs.FeastingSpores, threshold: 18, path: './imgs/buffs/deathspore_arrows.data.png',
+      //   abilityCooldown: 0,
+      //   hasAbilityCooldown: false,
+      //   isTarget: false,
+      //   isStack: false
+      // },
+      // {
+      //   name: "Icy chill",
+      //   image: this.Buffs.icyChill,
+      //   threshold: 400,
+      //   path: './imgs/icons/icy_chill.png',
+      //   hasAbilityCooldown: false,
+      //   abilityCooldown: 0,
+      //   isStack: true,
+      //   isTarget: false,
+      //   debug: true,
+      //   useAggressiveSearh: false
+      // },
       {
         name: "Cannon Decay", image: this.Debuffs.cannon, threshold: 120, path: './imgs/icons/cannon.png',
         abilityCooldown: 0,
