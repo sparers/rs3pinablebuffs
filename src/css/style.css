@@ -33,17 +33,17 @@ body {
 .tabs {
   display: flex;
   gap: 0;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border-bottom: 2px solid #444;
   width: 100%;
-  max-width: 600px;
+  justify-content: space-between;
 }
 
 .tab-button {
   background: transparent;
   border: none;
   color: #999;
-  padding: 10px 20px;
+  padding: 10px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
@@ -184,7 +184,8 @@ p.version {
 
 .settings-section li img {
   margin: 10px 0;
-  width: 300px;
+  max-width: 100%;
+  width: 100%;
 }
 
 .settings-section.cooldowns {
@@ -413,7 +414,6 @@ p.version {
 
 .buttons-container {
   display: flex;
-  gap: 5px;
   flex-direction: row;
 }
 
@@ -597,7 +597,6 @@ h2 {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -634,12 +633,11 @@ h2 {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  margin-left: 4px;
+  padding: 0;
 }
 
 .audio-button:hover {
