@@ -107,412 +107,211 @@ export class BuffImageRegistry {
     this._buffData = [
       // --- BUFFS ---
       {
-        name: "Overload", image: this.Buffs.overloaded, threshold: 300, path: './imgs/icons/overload.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
+        name: "Overload", image: this.Buffs.overloaded, threshold: 300, path: './imgs/icons/overload.png'
       },
       {
-        name: "Elder Overload", image: this.Buffs.elderOverload, threshold: 60, path: './imgs/icons/elder_overload.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
+        name: "Elder Overload", image: this.Buffs.elderOverload, threshold: 60, path: './imgs/icons/elder_overload.png'
       },
       {
-        name: "Supreme Overload", image: this.Buffs.supremeOverloadActive, threshold: 30, path: './imgs/icons/supreme_overload.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
+        name: "Supreme Overload", image: this.Buffs.supremeOverloadActive, threshold: 30, path: './imgs/icons/supreme_overload.png'
       },
       {
-        name: "Weapon Poison", image: this.Buffs.poisonous, threshold: 300, path: './imgs/icons/weapon_poison.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
+        name: "Weapon Poison", image: this.Buffs.poisonous, threshold: 300, path: './imgs/icons/weapon_poison.png'
       },
       {
-        name: "Darkness", image: this.Buffs.darkness, threshold: 400, path: './imgs/icons/darkness.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
+        name: "Darkness", image: this.Buffs.darkness, threshold: 400, path: './imgs/icons/darkness.png'
       },
       {
-        name: "Animate Dead", image: this.Buffs.animateDead, threshold: 60, path: './imgs/icons/animate_dead.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
+        name: "Animate Dead", image: this.Buffs.animateDead, threshold: 60, path: './imgs/icons/animate_dead.png'
       },
       {
         name: "FSOA Spec", image: this.Buffs.fsoaWeaponSpec, threshold: 80, path: './imgs/icons/fsoa_spec.png',
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Time Rift", image: this.Buffs.timeRift, threshold: 450, path: './imgs/icons/time_rift.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Gladiators Rage", image: this.Buffs.gladiatorsRage, threshold: 50, path: './imgs/icons/gladiators_rage.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Necrosis", image: this.Buffs.necrosis, threshold: 150, path: './imgs/icons/necrosis.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
         isStack: true
       },
       {
         name: "Residual Soul", image: this.Buffs.residualSoul, threshold: 400, path: './imgs/icons/residual_soul.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
         isStack: true
       },
       {
         name: "Aura", image: this.Buffs.aura, threshold: 400, path: './imgs/icons/equilibrium_aura.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Bonfire Boost", image: this.Buffs.bonfireBoost, threshold: 400, path: './imgs/icons/bonfire.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Grimoire", image: this.Buffs.grimoire, threshold: 100, path: "./imgs/icons/grimoire.png",
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Lantadyme Incense", image: this.Incense.lantadyme, threshold: 119, path: './imgs/icons/lantadyme_incense_sticks.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Dwarf Weed Incense", image: this.Incense.dwarfWeed, threshold: 150, path: './imgs/icons/dwarf_weed_incense_sticks.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Fellstalk Incense", image: this.Incense.fellstalk, threshold: 150, path: './imgs/icons/fellstalk_weed_incense_sticks.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Kwuarm Incense", image: this.Incense.kwuarm, threshold: 150, path: './imgs/icons/kwuarm_weed_incense_sticks.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Antifire", image: this.Buffs.Antifire, threshold: 225, path: './imgs/icons/antifire.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Aggression Potion", image: this.Buffs.AggressionPotion, threshold: 120, path: './imgs/icons/aggression_potion.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Powder of Protection", image: this.Buffs.PowderOfProtection, threshold: 130, path: './imgs/icons/powder_of_protection.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Powder of Penance", image: this.Buffs.PowderOfPenance, threshold: 130, path: './imgs/icons/powder_of_penance.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Prayer Renewal", image: this.Buffs.prayerRenewActive, threshold: 225, path: './imgs/icons/prayer_renewal.data.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Death Spark", image: this.Buffs.DeathSpark, threshold: 300, path: './imgs/icons/death_spark.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Balance By Force", image: this.Buffs.balanceByForce, threshold: 30, path: './imgs/icons/balance_by_force.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "BOLG Stacks", image: this.Buffs.perfectEquilibriumNoBorder, threshold: 300, path: './imgs/icons/perfect_equilibrium.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
         isStack: true
       },
       {
         name: "Anticipation", image: this.Buffs.Anticipation, threshold: 300, path: './imgs/icons/anticipation.png',
         abilityCooldown: 24.6,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Barricade", image: this.Buffs.Barricade, threshold: 300, path: './imgs/icons/barricade.png',
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Devotion", image: this.Buffs.Devotion, threshold: 300, path: './imgs/icons/devotion.png',
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Divert", image: this.Buffs.Divert, threshold: 300, path: './imgs/icons/divert.png',
         abilityCooldown: 30,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Freedom", image: this.Buffs.Freedom, threshold: 300, path: './imgs/icons/freedom.png',
         abilityCooldown: 30,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Immortality", image: this.Buffs.Immortality, threshold: 300, path: './imgs/icons/immortality.png',
         abilityCooldown: 120,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Reflect", image: this.Buffs.Reflect, threshold: 300, path: './imgs/icons/reflect.png',
         abilityCooldown: 30,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Resonance", image: this.Buffs.Resonance, threshold: 300, path: './imgs/icons/resonance.png',
         abilityCooldown: 30,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Split Soul", image: this.Buffs.SplitSoul, threshold: 350, path: './imgs/icons/split_soul.png',
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Threads of Fate", image: this.Buffs.ThreadsOfFate, threshold: 300, path: './imgs/icons/threads_of_fate.png',
         abilityCooldown: 45,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
 
 
       {
         name: "Conjure Skeleton", image: this.Buffs.ConjureSkeleton, threshold: 300, path: './imgs/icons/skeleton_warrior.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Conjure Zombie", image: this.Buffs.ConjureZombie, threshold: 300, path: './imgs/icons/putrid_zombie.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Conjure Ghost", image: this.Buffs.ConjureGhost, threshold: 300, path: './imgs/icons/vengeful_ghost.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Split Soul ECB", image: this.Buffs.SplitSoulECB, threshold: 60, path: './imgs/icons/split_soul_ecb.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Invoke Lord of Bones", image: this.Buffs.InvokeLordOfBones, threshold: 180, path: './imgs/icons/lord_of_bones.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Adren Crit", image: this.Buffs.adrenCrit, threshold: 300, path: './imgs/icons/adren_crit_buff.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       // {
       //   name: "Glacial Embrace", image: this.Buffs.glacialEmbrace, threshold: 60, path: './imgs/icons/glacial_embrace.png',
-      //   abilityCooldown: 0,
-      //   hasAbilityCooldown: false,
-      //   isTarget: false,
       //   isStack: true
       // },
       {
         name: "Blood Tithe", image: this.Buffs.bloodTithe, threshold: 60, path: './imgs/icons/blood_tithe.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
 
       // --- DEBUFFS ---
       {
         name: "Ancient Elven Ritual Shard", image: this.Debuffs.elvenRitualShard, threshold: 90, path: './imgs/buffs/Ancient_Elven_Ritual_Shard-noborder.data.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Adrenaline Potion Debuff", image: this.Debuffs.adrenalinePotion, threshold: 300, path: './imgs/buffs/Adrenaline_Potion-noborder.data.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Death Guard Debuff", image: this.Debuffs.deathGraspDebuff, threshold: 90, path: './imgs/icons/death_guard.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Omni Guard Debuff", image: this.Debuffs.deathEssenceDebuff, threshold: 60, path: './imgs/icons/omni_guard.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Enhanced Excalibur Debuff", image: this.Debuffs.enhancedExcaliburDebuff, threshold: 15, path: './imgs/icons/excalibur.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Crystal Rain Debuff", image: this.Debuffs.crystalRainMinimal, threshold: 60, path: './imgs/buffs/Crystal_Rain-minimal-noborder.data.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Stunned Debuff", image: this.Debuffs.stunnedDebuff, threshold: 60, path: './imgs/buffs/Stunned.data.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Sign of Life Debuff", image: this.Debuffs.signOfLifeDebuff, threshold: 20, path: './imgs/icons/sign_of_life.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Powerburst Prevention", image: this.Debuffs.powerburstPrevention, threshold: 20, path: './imgs/buffs/Powerburst_prevention.data.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       // {
       //   name: "Deathspore Arrows", image: this.Debuffs.FeastingSpores, threshold: 18, path: './imgs/buffs/deathspore_arrows.data.png',
-      //   abilityCooldown: 0,
-      //   hasAbilityCooldown: false,
-      //   isTarget: false,
-      //   isStack: false
       // },
       // {
       //   name: "Icy chill",
       //   image: this.Buffs.icyChill,
       //   threshold: 400,
       //   path: './imgs/icons/icy_chill.png',
-      //   hasAbilityCooldown: false,
-      //   abilityCooldown: 0,
       //   isStack: true,
-      //   isTarget: false,
       //   debug: true,
       //   useAggressiveSearh: false
       // },
       {
         name: "Cannon Decay", image: this.Debuffs.cannon, threshold: 120, path: './imgs/icons/cannon.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Familiar", image: this.Buffs.familiar, threshold: 160, path: './imgs/icons/familiar.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
 
 
@@ -521,43 +320,27 @@ export class BuffImageRegistry {
         name: "Berserk", image: this.Ultimates.berserk, threshold: 200, path: './imgs/buffs/Berserk-noborder.data.png',
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Deaths Swiftness", image: this.Ultimates.deathsSwiftness, threshold: 270, path: './imgs/icons/deaths_swiftness.png',
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Greater Deaths Swiftness", image: this.Ultimates.greaterDeathsSwiftness, threshold: 450, path: "./imgs/buffs/Greater_Death's_Swiftness-noborder.data.png",
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Sunshine", image: this.Ultimates.sunshine, threshold: 500, path: './imgs/buffs/Sunshine-noborder.data.png',
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Greater Sunshine", image: this.Ultimates.greaterSunshine, threshold: 100, path: './imgs/buffs/Greater_Sunshine-noborder.data.png',
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Living Death", image: this.Ultimates.livingDeath, threshold: 400, path: './imgs/buffs/Living_Death-noborder.data.png',
         abilityCooldown: 90,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
 
       // --- SIGILS ---
@@ -565,71 +348,42 @@ export class BuffImageRegistry {
         name: "Limitless", image: this.Sigils.limitless, threshold: 250, path: './imgs/buffs/Limitless-noborder.data.png',
         abilityCooldown: 90,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Demon Slayer", image: this.Sigils.demonSlayer, threshold: 400, path: './imgs/buffs/Demon_Slayer-noborder.data.png',
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Dragon Slayer", image: this.Sigils.dragonSlayer, threshold: 400, path: './imgs/buffs/Dragon_Slayer-noborder.data.png',
-        debug: false,
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Undead Slayer", image: this.Sigils.undeadSlayer, threshold: 400, path: './imgs/buffs/Undead_Slayer-noborder.data.png',
-        debug: false,
         abilityCooldown: 60,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
         name: "Ingenuity of the Humans", image: this.Sigils.ingenuityOfTheHumans, threshold: 400, path: './imgs/buffs/Ingenuity_of_the_Humans-noborder.data.png',
-        debug: false,
         abilityCooldown: 90,
         hasAbilityCooldown: true,
-        isTarget: false,
-        isStack: false
       },
       {
-        name: "Death Mark", image: this.Target.deathMark, threshold: 0, path: './imgs/icons/death_mark.png',
-        debug: false,
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
+        name: "Death Mark", image: this.Target.deathMark, path: './imgs/icons/death_mark.png',
         isTarget: true,
-        isStack: false
       },
       {
-        name: "Vulnerability", image: this.Target.vulnerability, threshold: 0, path: './imgs/icons/vulnerability.png',
-        debug: false,
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
+        name: "Vulnerability", image: this.Target.vulnerability, path: './imgs/icons/vulnerability.png',
         isTarget: true,
-        isStack: false
       },
       {
-        name: "Bloat", image: this.Target.bloat, threshold: 0, path: './imgs/icons/bloat.png',
-        debug: false,
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
+        name: "Bloat", image: this.Target.bloat, path: './imgs/icons/bloat.png',
         isTarget: true,
-        isStack: false
       },
       {
-        name: "Smoke Cloud", image: this.Target.smokeCloud, threshold: 0, path: './imgs/icons/smoke_cloud.png',
-        debug: false,
-        abilityCooldown: 0,
-        hasAbilityCooldown: false,
+        name: "Smoke Cloud", image: this.Target.smokeCloud, path: './imgs/icons/smoke_cloud.png',
         isTarget: true,
-        isStack: false
       }
     ];
 
@@ -645,4 +399,3 @@ export class BuffImageRegistry {
 
   private static _buffData: Array<BuffData> = [];
 }
-

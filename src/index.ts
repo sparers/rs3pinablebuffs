@@ -89,7 +89,6 @@ Alpine.data('buffsData', () => ({
   clockTickingAudio: new Audio(clockTicking),
   popAlertAudio: new Audio(cooldownAlert),
   activeTab: 'buffs',
-  timestamp: null,
   lastUpdate: Date.now(),
   isOverlayPositionSet: {
     buffs: false,
@@ -134,7 +133,6 @@ Alpine.data('buffsData', () => ({
       this.checkOverlayPositions();
     });
   },
-
 
   startPositionTracking(group: string): number {
     const placeholderGroup = `${group}-placeholder`;

@@ -261,8 +261,8 @@ export class BuffManager {
       abilityCooldown: cooldownState.abilityCooldown,
       abilityCooldownProgress: cooldownState.abilityCooldownProgress,
       abilityCooldownMax: cooldownState.abilityCooldownMax,
-      hasAbilityCooldown: buffData.hasAbilityCooldown,
-      isStack: buffData.isStack,
+      hasAbilityCooldown: !!buffData.hasAbilityCooldown,
+      isStack: !!buffData.isStack,
       text: durationState.text
     });
   }
@@ -306,27 +306,38 @@ export class BuffManager {
     buffData: BuffData,
     newBuffProgress: number
   ): { abilityCooldown: number; abilityCooldownMax: number; abilityCooldownProgress: number } {
+    const hasCooldown = !!buffData.hasAbilityCooldown;
+    const initialCooldown = hasCooldown ? buffData.abilityCooldown ?? 0 : 0;
+
     if (!existingBuff) {
       return {
-        abilityCooldown: buffData.abilityCooldown,
-        abilityCooldownMax: buffData.abilityCooldown,
-        abilityCooldownProgress: 100
+        abilityCooldown: initialCooldown,
+        abilityCooldownMax: hasCooldown ? initialCooldown : 0,
+        abilityCooldownProgress: hasCooldown && initialCooldown > 0 ? 100 : 0
       };
     }
 
-    if (newBuffProgress === 100 && existingBuff.buffProgress < 100 && buffData.hasAbilityCooldown) {
+    if (!hasCooldown) {
       return {
-        abilityCooldown: buffData.abilityCooldown,
-        abilityCooldownMax: buffData.abilityCooldown,
+        abilityCooldown: existingBuff.abilityCooldown ?? 0,
+        abilityCooldownMax: existingBuff.abilityCooldownMax ?? 0,
+        abilityCooldownProgress: existingBuff.abilityCooldownProgress ?? 0
+      };
+    }
+
+    if (newBuffProgress === 100 && existingBuff.buffProgress < 100) {
+      return {
+        abilityCooldown: initialCooldown,
+        abilityCooldownMax: initialCooldown,
         abilityCooldownProgress: 100
       };
     }
 
-    if (existingBuff.buffDuration === 0 && buffData.hasAbilityCooldown) {
+    if (existingBuff.buffDuration === 0) {
       if (existingBuff.abilityCooldown === 0 || existingBuff.abilityCooldownMax === 0) {
         return {
-          abilityCooldown: buffData.abilityCooldown,
-          abilityCooldownMax: buffData.abilityCooldown,
+          abilityCooldown: initialCooldown,
+          abilityCooldownMax: initialCooldown,
           abilityCooldownProgress: 100
         };
       }

@@ -3,12 +3,12 @@ import type { ImgRef } from 'alt1';
 export interface BuffData {
     name: string;
     image: any;
-    threshold: number;
+    threshold?: number;
     path: string;
-    abilityCooldown: number;
-    hasAbilityCooldown: boolean;
-    isStack: boolean;
-    isTarget: boolean;
+    abilityCooldown?: number;
+    hasAbilityCooldown?: boolean;
+    isStack?: boolean;
+    isTarget?: boolean;
     useAggressiveSearh?: boolean;
     debug?: boolean;
 }
@@ -59,5 +59,3 @@ export interface OverlaySettings {
 }
 
 export type ImageCollection = Record<string, ImgRef>;
-
-
