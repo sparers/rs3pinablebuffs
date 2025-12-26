@@ -51,7 +51,7 @@ export class BuffManager {
     return this.getSortedCachedBuffs();
   };
 
-  public getTargetDebuffs(trackedTargetDebuffs: Record<string, boolean>) {
+  public getTargetDebuffs = (trackedTargetDebuffs: Record<string, boolean>) => {
     const hasTarget = this.targetMob.read();
 
     if (!hasTarget) {
@@ -188,27 +188,27 @@ export class BuffManager {
     this.saveCachedBuffs();
   };
 
-  private ensureReaderPosition(reader: BuffReader.default): void {
+  private ensureReaderPosition = (reader: BuffReader.default): void => {
     if (!reader.pos) {
       this.findBuffsAndDebuffs(reader);
     }
   }
 
-  private readActiveEntries(): Alt1Buff[] {
+  private readActiveEntries = (): Alt1Buff[] => {
     const activeBuffs = this.buffs.pos ? this.buffs.read() ?? [] : [];
     const activeDebuffs = this.debuffs.pos ? this.debuffs.read() ?? [] : [];
     return [...activeBuffs, ...activeDebuffs];
   }
 
-  private getRegisteredBuffs(): BuffData[] {
+  private getRegisteredBuffs = (): BuffData[] => {
     return BuffImageRegistry.buffData.filter(buff => !buff.isTarget);
   }
 
-  private applyBuffMatches(
+  private applyBuffMatches = (
     activeEntries: Alt1Buff[],
     registeredBuffs: BuffData[],
     currentActiveBuffs: Set<string>
-  ): void {
+  ): void => {
     for (const activeEntry of activeEntries) {
       for (const buffData of registeredBuffs) {
         if (!buffData.image) {
@@ -220,6 +220,10 @@ export class BuffManager {
           buffData.useAggressiveSearh || false
         );
 
+        if (buffData.debug) {
+          console.log(buffData.name)
+        }
+
         if (matchResult.passed >= buffData.threshold) {
           this.registerMatchedBuff(activeEntry, buffData, currentActiveBuffs, matchResult.passed);
           break;
@@ -228,12 +232,12 @@ export class BuffManager {
     }
   }
 
-  private registerMatchedBuff(
+  private registerMatchedBuff = (
     activeBuff: Alt1Buff,
     buffData: BuffData,
     currentActiveBuffs: Set<string>,
     matchScore: number
-  ): void {
+  ): void => {
     const detectedDuration = activeBuff.readTime();
     const buffText = activeBuff.readArg('arg').arg || '';
 
@@ -267,11 +271,11 @@ export class BuffManager {
     });
   }
 
-  private calculateDurationState(
+  private calculateDurationState = (
     buffText: string,
     detectedDuration: number,
     existingBuff?: BuffCacheEntry
-  ): { buffDuration: number; buffDurationMax: number; buffProgress: number; text: string } {
+  ): { buffDuration: number; buffDurationMax: number; buffProgress: number; text: string } => {
     if (detectedDuration <= 59) {
       let buffDurationMax = existingBuff?.buffDurationMax ?? detectedDuration;
       if (buffDurationMax <= 0 && detectedDuration > 0) {
@@ -304,11 +308,11 @@ export class BuffManager {
     };
   }
 
-  private calculateCooldownState(
+  private calculateCooldownState = (
     existingBuff: BuffCacheEntry | undefined,
     buffData: BuffData,
     newBuffProgress: number
-  ): { abilityCooldown: number; abilityCooldownMax: number; abilityCooldownProgress: number } {
+  ): { abilityCooldown: number; abilityCooldownMax: number; abilityCooldownProgress: number } => {
     const hasCooldown = !!buffData.hasAbilityCooldown;
     const initialCooldown = hasCooldown ? buffData.abilityCooldown ?? 0 : 0;
 
@@ -359,25 +363,36 @@ export class BuffManager {
     };
   }
 
-  private expireMissingBuffs(currentActiveBuffs: Set<string>): void {
+  private expireMissingBuffs = (currentActiveBuffs: Set<string>): void => {
     this.matchedBuffsCache.forEach((buff, buffName) => {
-      if (!currentActiveBuffs.has(buffName) && buff.buffDuration > 0) {
-        buff.buffDuration = 0;
-        buff.buffProgress = 0;
+      if (!currentActiveBuffs.has(buffName)) {
+        this.expireBuff(buff);
       }
     });
   }
 
-  private expireAllCachedBuffs(): void {
+  private expireAllCachedBuffs = (): void => {
     this.matchedBuffsCache.forEach(buff => {
-      if (buff.buffDuration > 0) {
-        buff.buffDuration = 0;
-        buff.buffProgress = 0;
-      }
+      this.expireBuff(buff);
     });
   }
 
-  private getSortedCachedBuffs(): BuffCacheEntry[] {
+  private expireBuff = (buff: BuffCacheEntry): void => {
+    buff.buffDuration = 0;
+    buff.buffDurationMax = 0;
+    buff.buffProgress = 0;
+    buff.text = '';
+
+    if (!buff.hasAbilityCooldown) {
+      buff.abilityCooldown = 0;
+      buff.abilityCooldownMax = 0;
+      buff.abilityCooldownProgress = 0;
+    }
+
+    buff.lastUpdate = Date.now();
+  }
+
+  private getSortedCachedBuffs = (): BuffCacheEntry[] => {
     const buffsArray = Array.from(this.matchedBuffsCache.values());
     buffsArray.sort((a, b) => {
       if (a.isPinned !== b.isPinned) {

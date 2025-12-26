@@ -10,7 +10,7 @@ export class BuffImageRegistry {
   private static Target: any = null;
   private static initialized = false;
 
-  static async initialize(): Promise<void> {
+  static initialize = async (): Promise<void> => {
     if (this.initialized) return;
 
     this.Buffs = await a1lib.webpackImages({
@@ -31,7 +31,7 @@ export class BuffImageRegistry {
       timeRift: require('./imgs/buffs/Time_rift-noborder.data.png'),
       aura: require('./imgs/buffs/Aura-noborder.data.png'),
       bonfireBoost: require('./imgs/buffs/Bonfire_Boost-noborder.data.png'),
-      grimoire: require("./imgs/buffs/Erethdor's_grimoire-noborder.data.png"),
+      grimoire: require("./imgs/buffs/erethdors_grimoire2.data.png"),
       Anticipation: require('./imgs/buffs/Anticipation.data.png'),
       Barricade: require('./imgs/buffs/Barricade.data.png'),
       Devotion: require('./imgs/buffs/Devotion.data.png'),
@@ -150,7 +150,7 @@ export class BuffImageRegistry {
         name: "Bonfire Boost", image: this.Buffs.bonfireBoost, threshold: 400, path: './imgs/icons/bonfire.png',
       },
       {
-        name: "Grimoire", image: this.Buffs.grimoire, threshold: 100, path: "./imgs/icons/grimoire.png",
+        name: "Grimoire", image: this.Buffs.grimoire, threshold: 350, path: "./imgs/icons/grimoire.png", debug: true
       },
       {
         name: "Lantadyme Incense", image: this.Incense.lantadyme, threshold: 119, path: './imgs/icons/lantadyme_incense_sticks.png',
@@ -171,7 +171,7 @@ export class BuffImageRegistry {
         name: "Aggression Potion", image: this.Buffs.AggressionPotion, threshold: 120, path: './imgs/icons/aggression_potion.png',
       },
       {
-        name: "Powder of Protection", image: this.Buffs.PowderOfProtection, threshold: 130, path: './imgs/icons/powder_of_protection.png',
+        name: "Powder of Protection", image: this.Buffs.PowderOfProtection, threshold: 130, path: './imgs/icons/powder_of_protection.png'
       },
       {
         name: "Powder of Penance", image: this.Buffs.PowderOfPenance, threshold: 130, path: './imgs/icons/powder_of_penance.png',
@@ -304,7 +304,6 @@ export class BuffImageRegistry {
       //   threshold: 400,
       //   path: './imgs/icons/icy_chill.png',
       //   isStack: true,
-      //   debug: true,
       //   useAggressiveSearh: false
       // },
       {

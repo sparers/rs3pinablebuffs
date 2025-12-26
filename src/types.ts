@@ -1,4 +1,3 @@
-import type { ImgRef } from 'alt1';
 
 export interface BuffData {
     name: string;
@@ -57,5 +56,3 @@ export interface OverlaySettings {
     trackedTargetDebuffs: Record<string, boolean>;
     targetDebuffAudioAlert: boolean;
 }
-
-export type ImageCollection = Record<string, ImgRef>;
