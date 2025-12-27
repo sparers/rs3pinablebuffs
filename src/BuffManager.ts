@@ -476,27 +476,23 @@ export class BuffManager {
 
   private findBuffsAndDebuffs = (buffReader: BuffReader.default): boolean => {
     const buffsFound = buffReader.find();
+    if (!buffsFound) return false;
+    const area = 'buffsCaptureArea'
+    alt1.overLaySetGroup(area);
+    alt1.overLayRect(
+      a1lib.mixColor(120, 255, 120),
+      this.buffs.getCaptRect().x,
+      this.buffs.getCaptRect().y,
+      this.buffs.getCaptRect().width,
+      this.buffs.getCaptRect().height,
+      3000,
+      1
+    );
 
-    if (buffsFound) {
-      setTimeout(() => {
-        alt1.overLaySetGroup('buffsArea');
-        alt1.overLayRect(
-          a1lib.mixColor(120, 255, 120),
-          this.buffs.getCaptRect().x,
-          this.buffs.getCaptRect().y,
-          this.buffs.getCaptRect().width,
-          this.buffs.getCaptRect().height,
-          3000,
-          1
-        );
-      }, 1000);
+    setTimeout(() => {
+      alt1.overLayClearGroup(area);
+    }, 4000);
 
-      setTimeout(() => {
-        alt1.overLayClearGroup('buffsArea');
-      }, 4000);
-
-      return true;
-    }
-    return false;
+    return true;
   };
 }
