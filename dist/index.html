@@ -37,13 +37,13 @@
       <div class="tab-content" x-show="activeTab === 'buffs'">
         <div class="settings-section profiles-section">
           <div class="overlay-settings-field">
-              <label for="profile-select">Active profile</label>
-              <select id="profile-select" x-model="activeProfile" @change="switchProfile($event.target.value)" class="nis-select profile-select">
-                  <template x-for="profile in profiles" :key="profile">
-                    <option :value="profile" x-text="profile" :selected="profile === activeProfile"></option>
-                  </template>
-                </select>
-            </div>
+            <label for="profile-select">Active profile</label>
+            <select id="profile-select" x-model="activeProfile" @change="switchProfile($event.target.value)" class="nis-select profile-select">
+              <template x-for="profile in profiles" :key="profile">
+                <option :value="profile" x-text="profile" :selected="profile === activeProfile"></option>
+              </template>
+            </select>
+          </div>
         </div>
         <div class="overlay-warning" x-show="!isOverlayPositionSet.buffs || !isOverlayPositionSet.alerts">
           <svg viewBox="0 0 24 24" class="warning-icon" fill="currentColor">
@@ -59,8 +59,7 @@
             <p>Go to the <strong>Settings</strong> tab to set them.</p>
           </div>
         </div>
-        <div>
-          <div class="overlay-warning" x-show="buffs.length === 0">
+        <div class="overlay-warning" x-show="buffs.length === 0">
             <svg viewBox="0 0 24 24" class="warning-icon" fill="currentColor">
               <path d="M12,2L1,21H23L12,2M12,6L19.53,19H4.47L12,6M11,10V14H13V10H11M11,16V18H13V16H11Z"></path>
             </svg>
@@ -68,7 +67,6 @@
               <p>Active buffs will appear here once detected in-game.</p>
             </div>
           </div>
-
           <div class="settings-section" x-show="buffs.length > 0" id="buffs-output">
             <template x-for="(buff, index) in buffs" :key="buff.name">
               <div
@@ -169,7 +167,6 @@
               </div>
             </div>
           </div>
-        </div>
       </div>
 
       <div class="tab-content" x-show="activeTab === 'settings'">

@@ -1,6 +1,7 @@
 import Alpine from 'alpinejs';
 import * as a1lib from 'alt1';
 import "./appconfig.json";
+import { AsyncLoop } from './AsyncLoop';
 import clockTicking from './audio/clock-ticking.mp3';
 import cooldownAlert from './audio/long-pop-alert.wav';
 import { BuffImageRegistry } from './BuffImageRegistry';
@@ -8,11 +9,13 @@ import { BuffManager } from './BuffManager';
 import "./icon.png";
 import "./index.html";
 import { LocalStorageHelper } from './LocalStorageHelper';
+import { ProfileManager } from './ProfileManager';
 import { TargetManager } from './TargetManager';
 import { OverlaySettings } from './types';
 
 const storage = new LocalStorageHelper();
-const buffManager = new BuffManager(storage);
+const profileManager = new ProfileManager(storage);
+const buffManager = new BuffManager(storage, profileManager);
 const targetManager = new TargetManager();
 const BUFFS_OVERLAY_GROUP = 'buffsOverlayGroup';
 const CENTER_OVERLAY_GROUP = 'centerOverlayGroup';
@@ -26,8 +29,6 @@ const REFRESH_INTERVAL_MS = 150;
 const POSITION_TRACK_INTERVAL_MS = 100;
 const SCALE_RANGE = { min: 1, max: 3 };
 const ALERT_THRESHOLD_RANGE = { min: 1, max: 60 };
-
-let pauseRefresh = false;
 
 const createDefaultTrackedTargetDebuffs = () => ({
   vulnerability: false,
@@ -132,7 +133,7 @@ Alpine.data('buffsData', () => ({
     // Start tracking mouse with placeholder
     const intervalId = this.startPositionTracking(group);
 
-    const profileKey = buffManager.getProfileKey(group);
+    const profileKey = profileManager.getOverlayGroupKey(group, this.activeProfile);
     buffManager.setOverlayPosition(profileKey, () => {
       // Stop tracking and clear placeholder when position is saved
       this.stopPositionTracking(group, intervalId);
@@ -199,18 +200,12 @@ Alpine.data('buffsData', () => ({
       trackedTargetDebuffs: { ...this.overlaySettings.trackedTargetDebuffs }
     };
 
-    storage.save(buffManager.getSettingsKey(), this.overlaySettings);
+    storage.save(profileManager.getOverlaySettingsKey(this.activeProfile), this.overlaySettings);
   },
 
   loadOverlaySettings() {
-    const key = buffManager.getSettingsKey();
+    const key = profileManager.getOverlaySettingsKey(this.activeProfile);
     let saved = storage.get<OverlaySettings>(key);
-
-    // Migration: If no settings for this profile, and it's default, try the old global key
-    if (!saved && this.activeProfile === 'default') {
-      saved = storage.get<OverlaySettings>('overlaySettings');
-    }
-
     const defaults = createDefaultOverlaySettings();
     const savedTracked = mergeTrackedTargetDebuffs(saved?.trackedTargetDebuffs);
     const overlaySettings = saved
@@ -254,28 +249,28 @@ Alpine.data('buffsData', () => ({
       );
 
     if (hasChanges) {
-      storage.save(buffManager.getSettingsKey(), this.overlaySettings);
+      storage.save(profileManager.getOverlaySettingsKey(this.activeProfile), this.overlaySettings);
     }
   },
 
   resetSettings() {
-    pauseRefresh = true;
+    this.loop.pause();
     storage.clear();
     location.reload();
-    pauseRefresh = false;
+    this.loop.start();
   },
 
   loadProfiles() {
-    this.profiles = buffManager.getProfiles();
-    this.activeProfile = buffManager.getActiveProfile();
+    this.profiles = profileManager.getProfiles();
+    this.activeProfile = profileManager.getActiveProfile();
   },
 
   switchProfile(name: string) {
     if (!name) return;
-    pauseRefresh = true;
-    const previousBuffGroup = buffManager.getProfileKey(BUFFS_OVERLAY_GROUP);
-    const previousCenterGroup = buffManager.getProfileKey(CENTER_OVERLAY_GROUP);
-
+    this.loop.pause();
+    const previousProfile = profileManager.getActiveProfile();
+    const previousBuffGroup = profileManager.getOverlayGroupKey(BUFFS_OVERLAY_GROUP, previousProfile);
+    const previousCenterGroup = profileManager.getOverlayGroupKey(CENTER_OVERLAY_GROUP, previousProfile);
 
     this.alertedBuffs.clear();
     this.alertedDebuffs.clear();
@@ -288,21 +283,20 @@ Alpine.data('buffsData', () => ({
     alt1.overLayRefreshGroup(previousBuffGroup);
     alt1.overLayClearGroup(previousCenterGroup);
     alt1.overLayRefreshGroup(previousCenterGroup);
+
     this.activeProfile = name;
-    buffManager.setActiveProfile(name);
+
+    profileManager.setActiveProfile(name);
+    buffManager.loadCachedBuffs();
     this.loadOverlaySettings();
     this.checkOverlayPositions();
-
     this.activeTab = 'buffs';
-
-    pauseRefresh = false;
+    this.loop.start();
   },
 
   createProfile() {
     const name = this.newProfileName.trim();
     if (!name) return;
-
-
     this.switchProfile(name);
     buffManager.saveCachedBuffs();
     this.newProfileName = '';
@@ -311,19 +305,19 @@ Alpine.data('buffsData', () => ({
 
   deleteProfile(name: string) {
     if (name === 'default') return;
-    buffManager.deleteProfile(name);
+    profileManager.deleteProfile(name);
     this.loadProfiles();
     this.switchProfile('default');
   },
 
   checkOverlayPositions() {
-    this.isOverlayPositionSet.buffs = !!storage.get(buffManager.getProfileKey(BUFFS_OVERLAY_GROUP));
-    this.isOverlayPositionSet.alerts = !!storage.get(buffManager.getProfileKey(CENTER_OVERLAY_GROUP));
+    this.isOverlayPositionSet.buffs = !!storage.get(profileManager.getOverlayGroupKey(BUFFS_OVERLAY_GROUP, this.activeProfile));
+    this.isOverlayPositionSet.alerts = !!storage.get(profileManager.getOverlayGroupKey(CENTER_OVERLAY_GROUP, this.activeProfile));
   },
 
   onDragStart(event: DragEvent, index: number) {
+    this.loop.pause();
     this.draggedIndex = index;
-    pauseRefresh = true;
     if (event.dataTransfer) {
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('text/html', (event.target as HTMLElement).innerHTML);
@@ -334,7 +328,7 @@ Alpine.data('buffsData', () => ({
   onDragEnd(event: DragEvent) {
     (event.target as HTMLElement).classList.remove('dragging');
     this.draggedIndex = null;
-    pauseRefresh = false;
+    this.loop.start();
   },
 
   onDragOver(event: DragEvent) {
@@ -442,29 +436,29 @@ Alpine.data('buffsData', () => ({
     this.loadProfiles();
     this.loadOverlaySettings();
     this.checkOverlayPositions();
+
     const updateLoop = async () => {
-      // Skip update if user is dragging buffs or resetting
-      if (!pauseRefresh) {
-        const activeBuffs = await buffManager.getActiveBuffs();
-        this.buffs = cloneEntries(activeBuffs.filter(buff => !buff.isStack));
-        this.stacks = cloneEntries(activeBuffs.filter(buff => buff.isStack));
+      const activeBuffs = await buffManager.getActiveBuffs();
+      this.buffs = cloneEntries(activeBuffs.filter(buff => !buff.isStack));
+      this.stacks = cloneEntries(activeBuffs.filter(buff => buff.isStack));
 
-        const targetDebuffs = await targetManager.getTargetDebuffs(this.overlaySettings.trackedTargetDebuffs);
-        this.targetDebuffs = cloneEntries(targetDebuffs);
+      const targetDebuffs = await targetManager.getTargetDebuffs(this.overlaySettings.trackedTargetDebuffs);
+      this.targetDebuffs = cloneEntries(targetDebuffs);
 
-        if (activeBuffs.length > 0 || targetDebuffs.length > 0) {
-          this.checkAndPlayAlerts();
-        }
-
-        await waitForNextFrame();
-
-        const scale = this.overlaySettings.scale;
-        await captureElementAsOverlay('buffs-output', buffManager.getProfileKey(BUFFS_OVERLAY_GROUP), scale);
-        await captureElementAsOverlay('alerted-buffs', buffManager.getProfileKey(CENTER_OVERLAY_GROUP), scale);
+      if (activeBuffs.length > 0 || targetDebuffs.length > 0) {
+        this.checkAndPlayAlerts();
       }
-      window.setTimeout(updateLoop, REFRESH_INTERVAL_MS);
-    };
-    updateLoop();
+
+      await waitForNextFrame();
+
+      const scale = this.overlaySettings.scale;
+      await captureElementAsOverlay('buffs-output', profileManager.getOverlayGroupKey(BUFFS_OVERLAY_GROUP, this.activeProfile), scale);
+      await captureElementAsOverlay('alerted-buffs', profileManager.getOverlayGroupKey(CENTER_OVERLAY_GROUP, this.activeProfile), scale);
+    }
+
+    this.loop = new AsyncLoop(updateLoop, REFRESH_INTERVAL_MS);
+    this.loop.start();
+
   }
 }));
 

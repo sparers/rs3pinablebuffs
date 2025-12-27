@@ -3,6 +3,7 @@ import * as BuffReader from 'alt1/buffs';
 import * as htmlToImage from 'html-to-image';
 import { BuffImageRegistry } from './BuffImageRegistry';
 import { LocalStorageHelper } from './LocalStorageHelper';
+import { ProfileManager } from './ProfileManager';
 import type { BuffCacheEntry, BuffData, OverlayPosition, PersistedBuff } from './types';
 
 type Alt1Buff = NonNullable<ReturnType<BuffReader.default['read']>>[number];
@@ -11,60 +12,16 @@ export class BuffManager {
   private readonly buffs: BuffReader.default;
   private readonly debuffs: BuffReader.default;
   private readonly storage: LocalStorageHelper;
+  private readonly profileManager: ProfileManager;
   private readonly matchedBuffsCache = new Map<string, BuffCacheEntry>();
-  private readonly TRACKED_BUFFS_KEY_PREFIX = 'profile_';
-  private readonly TRACKED_BUFFS_KEY_SUFFIX = '_trackedBuffs';
-  private readonly SETTINGS_KEY_SUFFIX = '_overlaySettings';
-  private readonly ACTIVE_PROFILE = 'activeProfile';
-  private activeProfile: string = 'default';
 
-  constructor(storage: LocalStorageHelper) {
+  constructor(storage: LocalStorageHelper, profileManager: ProfileManager) {
     this.buffs = new BuffReader.default();
     this.debuffs = new BuffReader.default();
-    this.debuffs.debuffs = true;
     this.storage = storage;
+    this.profileManager = profileManager;
     this.loadCachedBuffs();
   }
-
-  public getActiveProfile = () => {
-    this.activeProfile = this.storage.get<string>(this.ACTIVE_PROFILE)?.toString() || 'default';
-    return this.activeProfile;
-  };
-
-  public setActiveProfile = (profileName: string) => {
-    this.activeProfile = profileName;
-    this.storage.save<string>(this.ACTIVE_PROFILE, profileName);
-    this.loadCachedBuffs();
-  };
-
-  public getProfiles = (): string[] => {
-    const profiles = new Set<string>(['default']);
-    const keys = Object.keys(window.localStorage);
-    const prefix = 'rs3PinnableBuffs_' + this.TRACKED_BUFFS_KEY_PREFIX;
-    keys.forEach(key => {
-      if (key.startsWith(prefix) && key.endsWith(this.TRACKED_BUFFS_KEY_SUFFIX)) {
-        const profileName = key.substring(prefix.length, key.length - this.TRACKED_BUFFS_KEY_SUFFIX.length);
-        if (profileName) {
-          profiles.add(profileName);
-        }
-      }
-    });
-    return Array.from(profiles);
-  };
-
-  public deleteProfile = (profileName: string) => {
-    if (profileName === 'default') return;
-    this.storage.remove(this.TRACKED_BUFFS_KEY_PREFIX + profileName + this.TRACKED_BUFFS_KEY_SUFFIX);
-    this.storage.remove(this.TRACKED_BUFFS_KEY_PREFIX + profileName + this.SETTINGS_KEY_SUFFIX);
-    this.storage.remove(this.TRACKED_BUFFS_KEY_PREFIX + profileName + '_buffsOverlayGroup');
-    this.storage.remove(this.TRACKED_BUFFS_KEY_PREFIX + profileName + '_centerOverlayGroup');
-  };
-
-  public getTrackedBuffsKey = () => this.TRACKED_BUFFS_KEY_PREFIX + this.activeProfile + this.TRACKED_BUFFS_KEY_SUFFIX;
-
-  public getSettingsKey = () => this.TRACKED_BUFFS_KEY_PREFIX + this.activeProfile + this.SETTINGS_KEY_SUFFIX;
-
-  public getProfileKey = (baseKey: string) => this.TRACKED_BUFFS_KEY_PREFIX + this.activeProfile + '_' + baseKey;
 
   public getActiveBuffs = async (): Promise<BuffCacheEntry[]> => {
     this.ensureReaderPosition(this.buffs);
@@ -431,11 +388,11 @@ export class BuffManager {
       isStack: buff.isStack,
       text: buff.text
     }));
-    this.storage.save(this.getTrackedBuffsKey(), buffsArray);
+    this.storage.save(this.profileManager.getTrackedBuffsKey(), buffsArray);
   };
 
-  private loadCachedBuffs = (): void => {
-    const key = this.getTrackedBuffsKey();
+  public loadCachedBuffs = (): void => {
+    const key = this.profileManager.getTrackedBuffsKey();
     const buffsArray = this.storage.get<PersistedBuff[]>(key);
     this.matchedBuffsCache.clear();
     if (buffsArray && Array.isArray(buffsArray)) {
