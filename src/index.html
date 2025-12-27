@@ -35,6 +35,16 @@
       </div>
 
       <div class="tab-content" x-show="activeTab === 'buffs'">
+        <div class="settings-section profiles-section">
+          <div class="overlay-settings-field">
+              <label for="profile-select">Active profile</label>
+              <select id="profile-select" x-model="activeProfile" @change="switchProfile($event.target.value)" class="nis-select profile-select">
+                  <template x-for="profile in profiles" :key="profile">
+                    <option :value="profile" x-text="profile" :selected="profile === activeProfile"></option>
+                  </template>
+                </select>
+            </div>
+        </div>
         <div class="overlay-warning" x-show="!isOverlayPositionSet.buffs || !isOverlayPositionSet.alerts">
           <svg viewBox="0 0 24 24" class="warning-icon" fill="currentColor">
             <path d="M12,2L1,21H23L12,2M12,6L19.53,19H4.47L12,6M11,10V14H13V10H11M11,16V18H13V16H11Z" />
@@ -165,12 +175,52 @@
       <div class="tab-content" x-show="activeTab === 'settings'">
         <div class="settings-section">
           <h2>Overlays</h2>
-          <p>To set the overlay click the button, go to your desired location and press alt + 1.</p>
-          <p>Only pinned buffs will be displayed in the overlay.</p>
           <div class="header-buttons">
             <button x-on:click="setOverlayPosition('buffsOverlayGroup')" class="nisbutton">Set buffs</button>
             <button x-on:click="setOverlayPosition('centerOverlayGroup')" class="nisbutton">Set alerts</button>
           </div>
+          <p>To set the overlay click the button, go to your desired location and press alt + 1.</p>
+          <div class="overlay-settings-form">
+              <div class="overlay-settings-field">
+                <label for="scale-input">Overlay scale:</label>
+                <input
+                  id="scale-input"
+                  type="number"
+                  class="nis-input"
+                  x-model.number="overlaySettingsForm.scale"
+                  @change="saveOverlaySettings()"
+                  min="1"
+                  max="3"
+                  step="0.5"
+                />
+              </div>
+              <div class="overlay-settings-field">
+                <label for="buff-threshold-input">Buff Duration Alert Threshold (s):</label>
+                <input
+                  id="buff-threshold-input"
+                  type="number"
+                  class="nis-input"
+                  x-model.number="overlaySettingsForm.buffDurationAlertThreshold"
+                  @change="saveOverlaySettings()"
+                  min="1"
+                  max="60"
+                  step=".5"
+                />
+              </div>
+              <div class="overlay-settings-field">
+                <label for="ability-threshold-input">Ability Cooldown Alert Threshold (s):</label>
+                <input
+                  id="ability-threshold-input"
+                  type="number"
+                  class="nis-input"
+                  x-model.number="overlaySettingsForm.abilityCooldownAlertThreshold"
+                  @change="saveOverlaySettings()"
+                  min="1"
+                  max="60"
+                  step="1"
+                />
+              </div>
+            </div>
         </div>
 
         <div class="settings-section">
@@ -281,56 +331,22 @@
                   />
                 </svg>
               </button>
-            </div>
+            </div>            
           </div>
         </div>
 
         <div class="settings-section">
-          <h2>Overlay Settings</h2>
-          <p class="warning-text">Settings are saved automatically on field blur.</p>
-          <form validate="true">
-            <div class="overlay-settings-form">
-              <div class="overlay-settings-field">
-                <label for="scale-input">Overlay scale:</label>
-                <input
-                  id="scale-input"
-                  type="number"
-                  class="overlay-settings-input"
-                  x-model.number="overlaySettingsForm.scale"
-                  @change="saveOverlaySettings()"
-                  min="1"
-                  max="3"
-                  step="0.5"
-                />
-              </div>
-              <div class="overlay-settings-field">
-                <label for="buff-threshold-input">Buff Duration Alert Threshold (s):</label>
-                <input
-                  id="buff-threshold-input"
-                  type="number"
-                  class="overlay-settings-input"
-                  x-model.number="overlaySettingsForm.buffDurationAlertThreshold"
-                  @change="saveOverlaySettings()"
-                  min="1"
-                  max="60"
-                  step=".5"
-                />
-              </div>
-              <div class="overlay-settings-field">
-                <label for="ability-threshold-input">Ability Cooldown Alert Threshold (s):</label>
-                <input
-                  id="ability-threshold-input"
-                  type="number"
-                  class="overlay-settings-input"
-                  x-model.number="overlaySettingsForm.abilityCooldownAlertThreshold"
-                  @change="saveOverlaySettings()"
-                  min="1"
-                  max="60"
-                  step="1"
-                />
-              </div>
+          <h2>Profiles</h2>
+          <p>Create a new profile or delete the active one.</p>
+          <div class="profile-controls">
+            <div class="profile-actions">
+              <input type="text" x-model="newProfileName" placeholder="New profile name..." class="nis-input" @keyup.enter="createProfile()" />
             </div>
-          </form>
+            <div class="header-buttons" style="margin-top: 5px;">
+              <button @click="createProfile()" class="nisbutton">Save</button>
+              <button @click="deleteProfile(activeProfile)" class="nisbutton" :disabled="activeProfile === 'default'">Delete</button>
+            </div>
+          </div>
         </div>
 
         <div class="settings-section">

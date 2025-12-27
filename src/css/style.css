@@ -677,6 +677,10 @@ h2 {
   justify-content: space-between;
 }
 
+.overlay-settings-form .nis-input {
+  width: 40px;
+}
+
 .overlay-settings-input {
   max-width: 50px;
   padding: 6px;
@@ -724,4 +728,67 @@ h2 {
   width: 24px;
   height: 24px;
   fill: currentColor;
+}
+
+/* Profiles Section */
+.profiles-section {
+  margin-bottom: 10px;
+}
+
+.profile-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-select {
+  width: 100px !important;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.profile-actions .nis-input {
+  flex-grow: 1;
+}
+
+.nis-select,
+.nis-input {
+  background: #1a1a1a;
+  border: 1px solid #444;
+  color: white;
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 13px;
+  width: 100%;
+}
+
+.nisbutton.small {
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
+  padding: 0 8px;
+}
+
+.nisbutton.delete {
+  text-shadow: 1px 1px 2px #ff4d4d;
+}
+
+.nisbutton.delete:not(:disabled) {
+  filter: hue-rotate(-120deg);
+}
+
+.nisbutton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(100%);
 }

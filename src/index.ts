@@ -25,6 +25,8 @@ const POSITION_TRACK_INTERVAL_MS = 100;
 const SCALE_RANGE = { min: 1, max: 3 };
 const ALERT_THRESHOLD_RANGE = { min: 1, max: 60 };
 
+let pauseRefresh = false;
+
 const createDefaultTrackedTargetDebuffs = () => ({
   vulnerability: false,
   deathMark: false,
@@ -81,8 +83,6 @@ Alpine.data('buffsData', () => ({
   targetDebuffs: [],
   stacks: [],
   draggedIndex: null as number | null,
-  isDragging: false,
-  resetInprogress: false,
   alertedBuffs: new Set<string>(),
   alertedDebuffs: new Set<string>(),
   abilityCooldownAlertedBuffs: new Set<string>(),
@@ -96,6 +96,9 @@ Alpine.data('buffsData', () => ({
   },
   overlaySettings: createDefaultOverlaySettings(),
   overlaySettingsForm: createDefaultOverlaySettings(),
+  activeProfile: 'default',
+  profiles: [] as string[],
+  newProfileName: '' as string,
 
   formatTime(seconds: number): string {
     const mins = Math.floor(seconds / 60);
@@ -127,7 +130,8 @@ Alpine.data('buffsData', () => ({
     // Start tracking mouse with placeholder
     const intervalId = this.startPositionTracking(group);
 
-    buffManager.setOverlayPosition(group, () => {
+    const profileKey = buffManager.getProfileKey(group);
+    buffManager.setOverlayPosition(profileKey, () => {
       // Stop tracking and clear placeholder when position is saved
       this.stopPositionTracking(group, intervalId);
       this.checkOverlayPositions();
@@ -193,11 +197,18 @@ Alpine.data('buffsData', () => ({
       trackedTargetDebuffs: { ...this.overlaySettings.trackedTargetDebuffs }
     };
 
-    storage.save('overlaySettings', this.overlaySettings);
+    storage.save(buffManager.getSettingsKey(), this.overlaySettings);
   },
 
   loadOverlaySettings() {
-    const saved = storage.get<OverlaySettings>('overlaySettings');
+    const key = buffManager.getSettingsKey();
+    let saved = storage.get<OverlaySettings>(key);
+
+    // Migration: If no settings for this profile, and it's default, try the old global key
+    if (!saved && this.activeProfile === 'default') {
+      saved = storage.get<OverlaySettings>('overlaySettings');
+    }
+
     const defaults = createDefaultOverlaySettings();
     const savedTracked = mergeTrackedTargetDebuffs(saved?.trackedTargetDebuffs);
     const overlaySettings = saved
@@ -241,25 +252,76 @@ Alpine.data('buffsData', () => ({
       );
 
     if (hasChanges) {
-      storage.save('overlaySettings', this.overlaySettings);
+      storage.save(buffManager.getSettingsKey(), this.overlaySettings);
     }
   },
 
   resetSettings() {
-    this.resetInprogress = true;
+    pauseRefresh = true;
     storage.clear();
     location.reload();
-    this.resetInprogress = false;
+    pauseRefresh = false;
+  },
+
+  loadProfiles() {
+    this.profiles = buffManager.getProfiles();
+    this.activeProfile = buffManager.getActiveProfile();
+  },
+
+  switchProfile(name: string) {
+    if (!name) return;
+    pauseRefresh = true;
+    const previousBuffGroup = buffManager.getProfileKey(BUFFS_OVERLAY_GROUP);
+    const previousCenterGroup = buffManager.getProfileKey(CENTER_OVERLAY_GROUP);
+
+
+    this.alertedBuffs.clear();
+    this.alertedDebuffs.clear();
+    this.abilityCooldownAlertedBuffs.clear();
+    this.buffs = [];
+    this.stacks = [];
+    this.targetDebuffs = [];
+
+    alt1.overLayClearGroup(previousBuffGroup);
+    alt1.overLayRefreshGroup(previousBuffGroup);
+    alt1.overLayClearGroup(previousCenterGroup);
+    alt1.overLayRefreshGroup(previousCenterGroup);
+    this.activeProfile = name;
+    buffManager.setActiveProfile(name);
+    this.loadOverlaySettings();
+    this.checkOverlayPositions();
+
+    this.activeTab = 'buffs';
+
+    pauseRefresh = false;
+  },
+
+  createProfile() {
+    const name = this.newProfileName.trim();
+    if (!name) return;
+
+
+    this.switchProfile(name);
+    buffManager.saveCachedBuffs();
+    this.newProfileName = '';
+    this.loadProfiles();
+  },
+
+  deleteProfile(name: string) {
+    if (name === 'default') return;
+    buffManager.deleteProfile(name);
+    this.loadProfiles();
+    this.switchProfile('default');
   },
 
   checkOverlayPositions() {
-    this.isOverlayPositionSet.buffs = !!storage.get(BUFFS_OVERLAY_GROUP);
-    this.isOverlayPositionSet.alerts = !!storage.get(CENTER_OVERLAY_GROUP);
+    this.isOverlayPositionSet.buffs = !!storage.get(buffManager.getProfileKey(BUFFS_OVERLAY_GROUP));
+    this.isOverlayPositionSet.alerts = !!storage.get(buffManager.getProfileKey(CENTER_OVERLAY_GROUP));
   },
 
   onDragStart(event: DragEvent, index: number) {
     this.draggedIndex = index;
-    this.isDragging = true;
+    pauseRefresh = true;
     if (event.dataTransfer) {
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('text/html', (event.target as HTMLElement).innerHTML);
@@ -270,7 +332,7 @@ Alpine.data('buffsData', () => ({
   onDragEnd(event: DragEvent) {
     (event.target as HTMLElement).classList.remove('dragging');
     this.draggedIndex = null;
-    this.isDragging = false;
+    pauseRefresh = false;
   },
 
   onDragOver(event: DragEvent) {
@@ -375,11 +437,12 @@ Alpine.data('buffsData', () => ({
   },
 
   async init() {
+    this.loadProfiles();
     this.loadOverlaySettings();
     this.checkOverlayPositions();
     const updateLoop = async () => {
-      // Skip update if user is dragging buffs
-      if (!this.isDragging && !this.resetInprogress) {
+      // Skip update if user is dragging buffs or resetting
+      if (!pauseRefresh) {
         const activeBuffs = await buffManager.getActiveBuffs();
         this.buffs = cloneEntries(activeBuffs.filter(buff => !buff.isStack));
         this.stacks = cloneEntries(activeBuffs.filter(buff => buff.isStack));
@@ -394,10 +457,8 @@ Alpine.data('buffsData', () => ({
         await waitForNextFrame();
 
         const scale = this.overlaySettings.scale;
-        if (this.buffs.some(buff => buff.isPinned)) {
-          await captureElementAsOverlay('buffs-output', BUFFS_OVERLAY_GROUP, scale);
-        }
-        await captureElementAsOverlay('alerted-buffs', CENTER_OVERLAY_GROUP, scale);
+        await captureElementAsOverlay('buffs-output', buffManager.getProfileKey(BUFFS_OVERLAY_GROUP), scale);
+        await captureElementAsOverlay('alerted-buffs', buffManager.getProfileKey(CENTER_OVERLAY_GROUP), scale);
       }
       window.setTimeout(updateLoop, REFRESH_INTERVAL_MS);
     };

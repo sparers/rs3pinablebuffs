@@ -14,7 +14,11 @@ export class BuffManager {
   private readonly storage: LocalStorageHelper;
   private readonly targetMob = new TargetMob.default();
   private readonly matchedBuffsCache = new Map<string, BuffCacheEntry>();
-  private readonly TRACKED_BUFFS_KEY = 'trackedBuffs';
+  private readonly TRACKED_BUFFS_KEY_PREFIX = 'profile_';
+  private readonly TRACKED_BUFFS_KEY_SUFFIX = '_trackedBuffs';
+  private readonly SETTINGS_KEY_SUFFIX = '_overlaySettings';
+  private readonly ACTIVE_PROFILE = 'activeProfile';
+  private activeProfile: string = 'default';
 
   constructor(storage: LocalStorageHelper) {
     this.buffs = new BuffReader.default();
@@ -23,6 +27,46 @@ export class BuffManager {
     this.storage = storage;
     this.loadCachedBuffs();
   }
+
+  public getActiveProfile = () => {
+    this.activeProfile = this.storage.get<string>(this.ACTIVE_PROFILE).toString() || 'default';
+    return this.activeProfile;
+  };
+
+  public setActiveProfile = (profileName: string) => {
+    this.activeProfile = profileName;
+    this.storage.save<string>(this.ACTIVE_PROFILE, profileName);
+    this.loadCachedBuffs();
+  };
+
+  public getProfiles = (): string[] => {
+    const profiles = new Set<string>(['default']);
+    const keys = Object.keys(window.localStorage);
+    const prefix = 'rs3PinnableBuffs_' + this.TRACKED_BUFFS_KEY_PREFIX;
+    keys.forEach(key => {
+      if (key.startsWith(prefix) && key.endsWith(this.TRACKED_BUFFS_KEY_SUFFIX)) {
+        const profileName = key.substring(prefix.length, key.length - this.TRACKED_BUFFS_KEY_SUFFIX.length);
+        if (profileName) {
+          profiles.add(profileName);
+        }
+      }
+    });
+    return Array.from(profiles);
+  };
+
+  public deleteProfile = (profileName: string) => {
+    if (profileName === 'default') return;
+    this.storage.remove(this.TRACKED_BUFFS_KEY_PREFIX + profileName + this.TRACKED_BUFFS_KEY_SUFFIX);
+    this.storage.remove(this.TRACKED_BUFFS_KEY_PREFIX + profileName + this.SETTINGS_KEY_SUFFIX);
+    this.storage.remove(this.TRACKED_BUFFS_KEY_PREFIX + profileName + '_buffsOverlayGroup');
+    this.storage.remove(this.TRACKED_BUFFS_KEY_PREFIX + profileName + '_centerOverlayGroup');
+  };
+
+  public getTrackedBuffsKey = () => this.TRACKED_BUFFS_KEY_PREFIX + this.activeProfile + this.TRACKED_BUFFS_KEY_SUFFIX;
+
+  public getSettingsKey = () => this.TRACKED_BUFFS_KEY_PREFIX + this.activeProfile + this.SETTINGS_KEY_SUFFIX;
+
+  public getProfileKey = (baseKey: string) => this.TRACKED_BUFFS_KEY_PREFIX + this.activeProfile + '_' + baseKey;
 
   public getActiveBuffs = async (): Promise<BuffCacheEntry[]> => {
     this.ensureReaderPosition(this.buffs);
@@ -77,19 +121,6 @@ export class BuffManager {
       targetLocation.h
     );
 
-    // alt1.overLaySetGroup('targetArea');
-    // alt1.overLayRect(
-    //   a1lib.mixColor(120, 255, 120),
-    //   capturedArea.x,
-    //   capturedArea.y,
-    //   capturedArea.width,
-    //   capturedArea.height,
-    //   3000,
-    //   1
-    // );
-    // alt1.overLayClearGroup('targetArea');
-
-
     const targetDebuffsData = BuffImageRegistry.buffData.filter(buff =>
       buff.isTarget &&
       trackedTargetDebuffs[buff.name.charAt(0).toLowerCase() + buff.name.slice(1).replace(/\s+/g, '')]
@@ -99,7 +130,6 @@ export class BuffManager {
       const isPresent = debuff.image ? capturedArea.findSubimage(debuff.image).length > 0 : false;
       return {
         ...debuff,
-        // Use abilityCooldown as a flag: 1 if active, 0 if not
         abilityCooldown: isPresent ? 1 : 0
       };
     });
@@ -114,7 +144,6 @@ export class BuffManager {
           y: Math.floor(mousePos.y),
         });
 
-        // Call the callback if provided
         if (onPositionSaved) {
           onPositionSaved();
         }
@@ -408,7 +437,6 @@ export class BuffManager {
     this.matchedBuffsCache.forEach(buff => {
       const elapsed = (now - buff.lastUpdate) / 1000;
       if (elapsed > 0) {
-        // Update buff duration
         if (buff.buffDuration > 0) {
           buff.buffDuration = Math.max(0, buff.buffDuration - elapsed);
           if (buff.buffDurationMax > 0) {
@@ -418,7 +446,6 @@ export class BuffManager {
           }
         }
 
-        // Update ability cooldown
         if (buff.abilityCooldown > 0) {
           buff.abilityCooldown = Math.max(0, buff.abilityCooldown - elapsed);
           if (buff.abilityCooldownMax > 0) {
@@ -433,7 +460,7 @@ export class BuffManager {
     });
   };
 
-  private saveCachedBuffs = (): void => {
+  public saveCachedBuffs = (): void => {
     const buffsArray: PersistedBuff[] = Array.from(this.matchedBuffsCache.values()).map(buff => ({
       name: buff.name,
       isPinned: buff.isPinned,
@@ -446,13 +473,14 @@ export class BuffManager {
       isStack: buff.isStack,
       text: buff.text
     }));
-    this.storage.save(this.TRACKED_BUFFS_KEY, buffsArray);
+    this.storage.save(this.getTrackedBuffsKey(), buffsArray);
   };
 
   private loadCachedBuffs = (): void => {
-    const buffsArray = this.storage.get<PersistedBuff[]>(this.TRACKED_BUFFS_KEY);
+    const key = this.getTrackedBuffsKey();
+    const buffsArray = this.storage.get<PersistedBuff[]>(key);
+    this.matchedBuffsCache.clear();
     if (buffsArray && Array.isArray(buffsArray)) {
-      this.matchedBuffsCache.clear();
       buffsArray.forEach(buff => {
         this.matchedBuffsCache.set(buff.name, {
           name: buff.name,
