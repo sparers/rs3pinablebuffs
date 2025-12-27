@@ -8119,6 +8119,123 @@ const isInstanceOfElement = (node, instance) => {
 
 /***/ },
 
+/***/ "./AsyncLoop.ts"
+/*!**********************!*\
+  !*** ./AsyncLoop.ts ***!
+  \**********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AsyncLoop: () => (/* binding */ AsyncLoop)
+/* harmony export */ });
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var AsyncLoop = /** @class */ (function () {
+    function AsyncLoop(workload, intervalMs) {
+        if (intervalMs === void 0) { intervalMs = 1000; }
+        this.isRunning = false;
+        this.timeoutId = null;
+        this.workload = workload;
+        this.intervalMs = intervalMs;
+    }
+    AsyncLoop.prototype.start = function () {
+        if (this.isRunning)
+            return;
+        this.isRunning = true;
+        console.log("Loop execution started.");
+        this.run();
+    };
+    AsyncLoop.prototype.pause = function () {
+        this.isRunning = false;
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+            this.timeoutId = null;
+        }
+        console.log("Loop execution paused.");
+    };
+    AsyncLoop.prototype.run = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var error_1;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.isRunning)
+                            return [2 /*return*/];
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, 4, 5]);
+                        return [4 /*yield*/, this.workload()];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 3:
+                        error_1 = _a.sent();
+                        console.error("AsyncLoop Error:", error_1);
+                        return [3 /*break*/, 5];
+                    case 4:
+                        if (this.isRunning) {
+                            this.timeoutId = setTimeout(function () { return _this.run(); }, this.intervalMs);
+                        }
+                        return [7 /*endfinally*/];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    AsyncLoop.prototype.setInterval = function (ms) {
+        this.intervalMs = ms;
+    };
+    Object.defineProperty(AsyncLoop.prototype, "active", {
+        get: function () {
+            return this.isRunning;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return AsyncLoop;
+}());
+
+
+
+/***/ },
+
 /***/ "./BuffImageRegistry.ts"
 /*!******************************!*\
   !*** ./BuffImageRegistry.ts ***!
@@ -8636,49 +8753,9 @@ var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from
 
 
 var BuffManager = /** @class */ (function () {
-    function BuffManager(storage) {
+    function BuffManager(storage, profileManager) {
         var _this = this;
         this.matchedBuffsCache = new Map();
-        this.TRACKED_BUFFS_KEY_PREFIX = 'profile_';
-        this.TRACKED_BUFFS_KEY_SUFFIX = '_trackedBuffs';
-        this.SETTINGS_KEY_SUFFIX = '_overlaySettings';
-        this.ACTIVE_PROFILE = 'activeProfile';
-        this.activeProfile = 'default';
-        this.getActiveProfile = function () {
-            var _a;
-            _this.activeProfile = ((_a = _this.storage.get(_this.ACTIVE_PROFILE)) === null || _a === void 0 ? void 0 : _a.toString()) || 'default';
-            return _this.activeProfile;
-        };
-        this.setActiveProfile = function (profileName) {
-            _this.activeProfile = profileName;
-            _this.storage.save(_this.ACTIVE_PROFILE, profileName);
-            _this.loadCachedBuffs();
-        };
-        this.getProfiles = function () {
-            var profiles = new Set(['default']);
-            var keys = Object.keys(window.localStorage);
-            var prefix = 'rs3PinnableBuffs_' + _this.TRACKED_BUFFS_KEY_PREFIX;
-            keys.forEach(function (key) {
-                if (key.startsWith(prefix) && key.endsWith(_this.TRACKED_BUFFS_KEY_SUFFIX)) {
-                    var profileName = key.substring(prefix.length, key.length - _this.TRACKED_BUFFS_KEY_SUFFIX.length);
-                    if (profileName) {
-                        profiles.add(profileName);
-                    }
-                }
-            });
-            return Array.from(profiles);
-        };
-        this.deleteProfile = function (profileName) {
-            if (profileName === 'default')
-                return;
-            _this.storage.remove(_this.TRACKED_BUFFS_KEY_PREFIX + profileName + _this.TRACKED_BUFFS_KEY_SUFFIX);
-            _this.storage.remove(_this.TRACKED_BUFFS_KEY_PREFIX + profileName + _this.SETTINGS_KEY_SUFFIX);
-            _this.storage.remove(_this.TRACKED_BUFFS_KEY_PREFIX + profileName + '_buffsOverlayGroup');
-            _this.storage.remove(_this.TRACKED_BUFFS_KEY_PREFIX + profileName + '_centerOverlayGroup');
-        };
-        this.getTrackedBuffsKey = function () { return _this.TRACKED_BUFFS_KEY_PREFIX + _this.activeProfile + _this.TRACKED_BUFFS_KEY_SUFFIX; };
-        this.getSettingsKey = function () { return _this.TRACKED_BUFFS_KEY_PREFIX + _this.activeProfile + _this.SETTINGS_KEY_SUFFIX; };
-        this.getProfileKey = function (baseKey) { return _this.TRACKED_BUFFS_KEY_PREFIX + _this.activeProfile + '_' + baseKey; };
         this.getActiveBuffs = function () { return __awaiter(_this, void 0, void 0, function () {
             var activeEntries, registeredBuffs, currentActiveBuffs;
             return __generator(this, function (_a) {
@@ -8993,10 +9070,10 @@ var BuffManager = /** @class */ (function () {
                 isStack: buff.isStack,
                 text: buff.text
             }); });
-            _this.storage.save(_this.getTrackedBuffsKey(), buffsArray);
+            _this.storage.save(_this.profileManager.getTrackedBuffsKey(), buffsArray);
         };
         this.loadCachedBuffs = function () {
-            var key = _this.getTrackedBuffsKey();
+            var key = _this.profileManager.getTrackedBuffsKey();
             var buffsArray = _this.storage.get(key);
             _this.matchedBuffsCache.clear();
             if (buffsArray && Array.isArray(buffsArray)) {
@@ -9035,8 +9112,8 @@ var BuffManager = /** @class */ (function () {
         };
         this.buffs = new (alt1_buffs__WEBPACK_IMPORTED_MODULE_1___default())();
         this.debuffs = new (alt1_buffs__WEBPACK_IMPORTED_MODULE_1___default())();
-        this.debuffs.debuffs = true;
         this.storage = storage;
+        this.profileManager = profileManager;
         this.loadCachedBuffs();
     }
     return BuffManager;
@@ -9105,6 +9182,80 @@ var LocalStorageHelper = /** @class */ (function () {
         };
     }
     return LocalStorageHelper;
+}());
+
+
+
+/***/ },
+
+/***/ "./ProfileManager.ts"
+/*!***************************!*\
+  !*** ./ProfileManager.ts ***!
+  \***************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ProfileManager: () => (/* binding */ ProfileManager)
+/* harmony export */ });
+var ProfileManager = /** @class */ (function () {
+    function ProfileManager(storage) {
+        var _this = this;
+        var _a, _b;
+        this.STORAGE_PREFIX = 'rs3PinnableBuffs_';
+        this.TRACKED_BUFFS_KEY_PREFIX = 'profile_';
+        this.TRACKED_BUFFS_KEY_SUFFIX = '_trackedBuffs';
+        this.SETTINGS_KEY_SUFFIX = '_overlaySettings';
+        this.ACTIVE_PROFILE_KEY = 'activeProfile';
+        this.resolveProfile = function (profileName) {
+            var _a, _b;
+            if (profileName) {
+                return profileName;
+            }
+            _this.activeProfile = (_b = (_a = _this.storage.get(_this.ACTIVE_PROFILE_KEY).toString()) !== null && _a !== void 0 ? _a : _this.activeProfile) !== null && _b !== void 0 ? _b : 'default';
+            return _this.activeProfile;
+        };
+        this.getActiveProfile = function () { return _this.resolveProfile(); };
+        this.setActiveProfile = function (profileName) {
+            _this.activeProfile = profileName;
+            _this.storage.save(_this.ACTIVE_PROFILE_KEY, profileName);
+        };
+        this.getProfiles = function () {
+            var profiles = new Set(['default']);
+            var prefix = "".concat(_this.STORAGE_PREFIX).concat(_this.TRACKED_BUFFS_KEY_PREFIX);
+            Object.keys(window.localStorage).forEach(function (key) {
+                if (key.startsWith(prefix) && key.endsWith(_this.TRACKED_BUFFS_KEY_SUFFIX)) {
+                    var profileName = key.substring(prefix.length, key.length - _this.TRACKED_BUFFS_KEY_SUFFIX.length);
+                    if (profileName) {
+                        profiles.add(profileName);
+                    }
+                }
+            });
+            return Array.from(profiles);
+        };
+        this.deleteProfile = function (profileName) {
+            if (profileName === 'default') {
+                return;
+            }
+            _this.storage.remove(_this.getTrackedBuffsKey(profileName));
+            _this.storage.remove(_this.getOverlaySettingsKey(profileName));
+            _this.storage.remove(_this.getOverlayGroupKey('buffsOverlayGroup', profileName));
+            _this.storage.remove(_this.getOverlayGroupKey('centerOverlayGroup', profileName));
+        };
+        this.getTrackedBuffsKey = function (profileName) {
+            return "".concat(_this.TRACKED_BUFFS_KEY_PREFIX).concat(_this.resolveProfile(profileName)).concat(_this.TRACKED_BUFFS_KEY_SUFFIX);
+        };
+        this.getOverlaySettingsKey = function (profileName) {
+            return "".concat(_this.TRACKED_BUFFS_KEY_PREFIX).concat(_this.resolveProfile(profileName)).concat(_this.SETTINGS_KEY_SUFFIX);
+        };
+        this.getOverlayGroupKey = function (groupKey, profileName) {
+            return "".concat(_this.TRACKED_BUFFS_KEY_PREFIX).concat(_this.resolveProfile(profileName), "_").concat(groupKey);
+        };
+        this.storage = storage;
+        this.activeProfile = (_b = (_a = this.storage.get(this.ACTIVE_PROFILE_KEY)) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : 'default';
+    }
+    return ProfileManager;
 }());
 
 
@@ -10123,14 +10274,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alt1 */ "../node_modules/alt1/dist/base/index.js");
 /* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alt1__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _appconfig_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./appconfig.json */ "./appconfig.json");
-/* harmony import */ var _audio_clock_ticking_mp3__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./audio/clock-ticking.mp3 */ "./audio/clock-ticking.mp3");
-/* harmony import */ var _audio_long_pop_alert_wav__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./audio/long-pop-alert.wav */ "./audio/long-pop-alert.wav");
-/* harmony import */ var _BuffImageRegistry__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./BuffImageRegistry */ "./BuffImageRegistry.ts");
-/* harmony import */ var _BuffManager__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BuffManager */ "./BuffManager.ts");
-/* harmony import */ var _icon_png__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./icon.png */ "./icon.png");
-/* harmony import */ var _index_html__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./index.html */ "./index.html");
-/* harmony import */ var _LocalStorageHelper__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./LocalStorageHelper */ "./LocalStorageHelper.ts");
-/* harmony import */ var _TargetManager__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./TargetManager */ "./TargetManager.ts");
+/* harmony import */ var _AsyncLoop__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AsyncLoop */ "./AsyncLoop.ts");
+/* harmony import */ var _audio_clock_ticking_mp3__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./audio/clock-ticking.mp3 */ "./audio/clock-ticking.mp3");
+/* harmony import */ var _audio_long_pop_alert_wav__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./audio/long-pop-alert.wav */ "./audio/long-pop-alert.wav");
+/* harmony import */ var _BuffImageRegistry__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BuffImageRegistry */ "./BuffImageRegistry.ts");
+/* harmony import */ var _BuffManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./BuffManager */ "./BuffManager.ts");
+/* harmony import */ var _icon_png__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./icon.png */ "./icon.png");
+/* harmony import */ var _index_html__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./index.html */ "./index.html");
+/* harmony import */ var _LocalStorageHelper__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./LocalStorageHelper */ "./LocalStorageHelper.ts");
+/* harmony import */ var _ProfileManager__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./ProfileManager */ "./ProfileManager.ts");
+/* harmony import */ var _TargetManager__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./TargetManager */ "./TargetManager.ts");
 var __assign = (undefined && undefined.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -10190,9 +10343,12 @@ var _a;
 
 
 
-var storage = new _LocalStorageHelper__WEBPACK_IMPORTED_MODULE_9__.LocalStorageHelper();
-var buffManager = new _BuffManager__WEBPACK_IMPORTED_MODULE_6__.BuffManager(storage);
-var targetManager = new _TargetManager__WEBPACK_IMPORTED_MODULE_10__.TargetManager();
+
+
+var storage = new _LocalStorageHelper__WEBPACK_IMPORTED_MODULE_10__.LocalStorageHelper();
+var profileManager = new _ProfileManager__WEBPACK_IMPORTED_MODULE_11__.ProfileManager(storage);
+var buffManager = new _BuffManager__WEBPACK_IMPORTED_MODULE_7__.BuffManager(storage, profileManager);
+var targetManager = new _TargetManager__WEBPACK_IMPORTED_MODULE_12__.TargetManager();
 var BUFFS_OVERLAY_GROUP = 'buffsOverlayGroup';
 var CENTER_OVERLAY_GROUP = 'centerOverlayGroup';
 var OVERLAY_GROUP_LABELS = (_a = {},
@@ -10203,7 +10359,6 @@ var REFRESH_INTERVAL_MS = 150;
 var POSITION_TRACK_INTERVAL_MS = 100;
 var SCALE_RANGE = { min: 1, max: 3 };
 var ALERT_THRESHOLD_RANGE = { min: 1, max: 60 };
-var pauseRefresh = false;
 var createDefaultTrackedTargetDebuffs = function () { return ({
     vulnerability: false,
     deathMark: false,
@@ -10252,8 +10407,8 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
     alertedBuffs: new Set(),
     alertedDebuffs: new Set(),
     abilityCooldownAlertedBuffs: new Set(),
-    clockTickingAudio: new Audio(_audio_clock_ticking_mp3__WEBPACK_IMPORTED_MODULE_3__),
-    popAlertAudio: new Audio(_audio_long_pop_alert_wav__WEBPACK_IMPORTED_MODULE_4__),
+    clockTickingAudio: new Audio(_audio_clock_ticking_mp3__WEBPACK_IMPORTED_MODULE_4__),
+    popAlertAudio: new Audio(_audio_long_pop_alert_wav__WEBPACK_IMPORTED_MODULE_5__),
     activeTab: 'buffs',
     lastUpdate: Date.now(),
     isOverlayPositionSet: {
@@ -10294,7 +10449,7 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
             var _this = this;
             return __generator(this, function (_a) {
                 intervalId = this.startPositionTracking(group);
-                profileKey = buffManager.getProfileKey(group);
+                profileKey = profileManager.getOverlayGroupKey(group, this.activeProfile);
                 buffManager.setOverlayPosition(profileKey, function () {
                     // Stop tracking and clear placeholder when position is saved
                     _this.stopPositionTracking(group, intervalId);
@@ -10328,17 +10483,13 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
         var abilityCooldown = clamp(this.overlaySettingsForm.abilityCooldownAlertThreshold, ALERT_THRESHOLD_RANGE.min, ALERT_THRESHOLD_RANGE.max);
         this.overlaySettings = __assign(__assign({}, this.overlaySettings), { scale: scale, buffDurationAlertThreshold: buffDuration, abilityCooldownAlertThreshold: abilityCooldown, trackedTargetDebuffs: __assign({}, this.overlaySettingsForm.trackedTargetDebuffs), targetDebuffAudioAlert: this.overlaySettingsForm.targetDebuffAudioAlert });
         this.overlaySettingsForm = __assign(__assign({}, this.overlaySettings), { trackedTargetDebuffs: __assign({}, this.overlaySettings.trackedTargetDebuffs) });
-        storage.save(buffManager.getSettingsKey(), this.overlaySettings);
+        storage.save(profileManager.getOverlaySettingsKey(this.activeProfile), this.overlaySettings);
     },
     loadOverlaySettings: function () {
         var _this = this;
         var _a, _b, _c, _d;
-        var key = buffManager.getSettingsKey();
+        var key = profileManager.getOverlaySettingsKey(this.activeProfile);
         var saved = storage.get(key);
-        // Migration: If no settings for this profile, and it's default, try the old global key
-        if (!saved && this.activeProfile === 'default') {
-            saved = storage.get('overlaySettings');
-        }
         var defaults = createDefaultOverlaySettings();
         var savedTracked = mergeTrackedTargetDebuffs(saved === null || saved === void 0 ? void 0 : saved.trackedTargetDebuffs);
         var overlaySettings = saved
@@ -10359,25 +10510,26 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
             saved.targetDebuffAudioAlert !== this.overlaySettings.targetDebuffAudioAlert ||
             Object.keys(savedTracked).some(function (key) { return savedTracked[key] !== _this.overlaySettings.trackedTargetDebuffs[key]; });
         if (hasChanges) {
-            storage.save(buffManager.getSettingsKey(), this.overlaySettings);
+            storage.save(profileManager.getOverlaySettingsKey(this.activeProfile), this.overlaySettings);
         }
     },
     resetSettings: function () {
-        pauseRefresh = true;
+        this.loop.pause();
         storage.clear();
         location.reload();
-        pauseRefresh = false;
+        this.loop.start();
     },
     loadProfiles: function () {
-        this.profiles = buffManager.getProfiles();
-        this.activeProfile = buffManager.getActiveProfile();
+        this.profiles = profileManager.getProfiles();
+        this.activeProfile = profileManager.getActiveProfile();
     },
     switchProfile: function (name) {
         if (!name)
             return;
-        pauseRefresh = true;
-        var previousBuffGroup = buffManager.getProfileKey(BUFFS_OVERLAY_GROUP);
-        var previousCenterGroup = buffManager.getProfileKey(CENTER_OVERLAY_GROUP);
+        this.loop.pause();
+        var previousProfile = profileManager.getActiveProfile();
+        var previousBuffGroup = profileManager.getOverlayGroupKey(BUFFS_OVERLAY_GROUP, previousProfile);
+        var previousCenterGroup = profileManager.getOverlayGroupKey(CENTER_OVERLAY_GROUP, previousProfile);
         this.alertedBuffs.clear();
         this.alertedDebuffs.clear();
         this.abilityCooldownAlertedBuffs.clear();
@@ -10389,11 +10541,12 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
         alt1.overLayClearGroup(previousCenterGroup);
         alt1.overLayRefreshGroup(previousCenterGroup);
         this.activeProfile = name;
-        buffManager.setActiveProfile(name);
+        profileManager.setActiveProfile(name);
+        buffManager.loadCachedBuffs();
         this.loadOverlaySettings();
         this.checkOverlayPositions();
         this.activeTab = 'buffs';
-        pauseRefresh = false;
+        this.loop.start();
     },
     createProfile: function () {
         var name = this.newProfileName.trim();
@@ -10407,17 +10560,17 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
     deleteProfile: function (name) {
         if (name === 'default')
             return;
-        buffManager.deleteProfile(name);
+        profileManager.deleteProfile(name);
         this.loadProfiles();
         this.switchProfile('default');
     },
     checkOverlayPositions: function () {
-        this.isOverlayPositionSet.buffs = !!storage.get(buffManager.getProfileKey(BUFFS_OVERLAY_GROUP));
-        this.isOverlayPositionSet.alerts = !!storage.get(buffManager.getProfileKey(CENTER_OVERLAY_GROUP));
+        this.isOverlayPositionSet.buffs = !!storage.get(profileManager.getOverlayGroupKey(BUFFS_OVERLAY_GROUP, this.activeProfile));
+        this.isOverlayPositionSet.alerts = !!storage.get(profileManager.getOverlayGroupKey(CENTER_OVERLAY_GROUP, this.activeProfile));
     },
     onDragStart: function (event, index) {
+        this.loop.pause();
         this.draggedIndex = index;
-        pauseRefresh = true;
         if (event.dataTransfer) {
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.setData('text/html', event.target.innerHTML);
@@ -10427,7 +10580,7 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
     onDragEnd: function (event) {
         event.target.classList.remove('dragging');
         this.draggedIndex = null;
-        pauseRefresh = false;
+        this.loop.start();
     },
     onDragOver: function (event) {
         event.preventDefault();
@@ -10531,9 +10684,7 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
                     var activeBuffs, targetDebuffs, scale;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0:
-                                if (!!pauseRefresh) return [3 /*break*/, 6];
-                                return [4 /*yield*/, buffManager.getActiveBuffs()];
+                            case 0: return [4 /*yield*/, buffManager.getActiveBuffs()];
                             case 1:
                                 activeBuffs = _a.sent();
                                 this.buffs = cloneEntries(activeBuffs.filter(function (buff) { return !buff.isStack; }));
@@ -10549,20 +10700,18 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].data('buffsData', function () {
                             case 3:
                                 _a.sent();
                                 scale = this.overlaySettings.scale;
-                                return [4 /*yield*/, captureElementAsOverlay('buffs-output', buffManager.getProfileKey(BUFFS_OVERLAY_GROUP), scale)];
+                                return [4 /*yield*/, captureElementAsOverlay('buffs-output', profileManager.getOverlayGroupKey(BUFFS_OVERLAY_GROUP, this.activeProfile), scale)];
                             case 4:
                                 _a.sent();
-                                return [4 /*yield*/, captureElementAsOverlay('alerted-buffs', buffManager.getProfileKey(CENTER_OVERLAY_GROUP), scale)];
+                                return [4 /*yield*/, captureElementAsOverlay('alerted-buffs', profileManager.getOverlayGroupKey(CENTER_OVERLAY_GROUP, this.activeProfile), scale)];
                             case 5:
                                 _a.sent();
-                                _a.label = 6;
-                            case 6:
-                                window.setTimeout(updateLoop, REFRESH_INTERVAL_MS);
                                 return [2 /*return*/];
                         }
                     });
                 }); };
-                updateLoop();
+                this.loop = new _AsyncLoop__WEBPACK_IMPORTED_MODULE_3__.AsyncLoop(updateLoop, REFRESH_INTERVAL_MS);
+                this.loop.start();
                 return [2 /*return*/];
             });
         });
@@ -10613,7 +10762,7 @@ function start() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, _BuffImageRegistry__WEBPACK_IMPORTED_MODULE_5__.BuffImageRegistry.initialize()];
+                case 0: return [4 /*yield*/, _BuffImageRegistry__WEBPACK_IMPORTED_MODULE_6__.BuffImageRegistry.initialize()];
                 case 1:
                     _a.sent();
                     alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].start();
