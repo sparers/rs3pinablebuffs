@@ -29,7 +29,7 @@ export class BuffManager {
   }
 
   public getActiveProfile = () => {
-    this.activeProfile = this.storage.get<string>(this.ACTIVE_PROFILE).toString() || 'default';
+    this.activeProfile = this.storage.get<string>(this.ACTIVE_PROFILE)?.toString() || 'default';
     return this.activeProfile;
   };
 
