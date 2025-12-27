@@ -147,7 +147,7 @@
                 <span class="title">Stacks</span>
                 <div class="buffs-row">
                   <template x-for="(buff, index) in stacks" :key="buff.name">
-                    <div class="stat-icon buff-icon cooldown" x-show="buff.buffDuration > 0 || buff.skipCooldownCheck">
+                    <div class="stat-icon buff-icon cooldown" x-show="buff.buffDuration > 0">
                       <img class="buff-icon-img" :src="buff.imagePath" :alt="buff.name" />
                       <span class="stacks" x-text="buff.text"></span>
                     </div>
